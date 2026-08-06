@@ -1,0 +1,200 @@
+ALFA_O COLLECTIVE INTELLIGENCE LICENSE (CIL), alfa_o edition, v1.0
+
+Copyright (c) 2026 LEED (leed.life) and devudaaaa Research Lab
+(devudaaaa.xyz). All rights reserved.
+
+Attribution within this work, which this license does not alter:
+Council-Driven Convergence, the method, is LEED's. Parallax and CLAW are
+devudaaaa Research Lab projects. The alfa_o pack is held jointly by both.
+
+This is a sibling of the Collective Intelligence License v1.0 governing
+the Parallax Engine. It is NOT the same document. Parallax is a research
+engine; alfa_o is a method meant to be carried onto other people's
+machines, so the terms below are deliberately more permissive. Where the
+two documents differ, each governs only its own work.
+
+════════════════════════════════════════════════════════════════════════
+IN PLAIN WORDS (a summary, not the license; the terms below govern)
+════════════════════════════════════════════════════════════════════════
+
+Use it anywhere, including at your job, on client work, and inside a
+company. You do not have to register, ask, or tell anyone. Keep the
+credit line. What you make with it is yours, and what you write into
+your own memory, logs, and workspaces is yours and stays private unless
+you decide otherwise. If you publish your own modified version of the
+pack, publish it under this same license so the improvements come back.
+If you want to sell alfa_o itself, or host it as a paid service, talk to
+us first.
+
+════════════════════════════════════════════════════════════════════════
+1. ACCEPTANCE
+════════════════════════════════════════════════════════════════════════
+
+This license is granted automatically when you use the Work. No
+registration, written notice, or acceptance ceremony is required.
+
+By using, copying, modifying, or distributing the Work, you accept these
+terms. If you do not accept them, do not use the Work.
+
+"The Work" means the alfa_o pack: PORTABLE_O.md, MEMORY.md, the
+workspaces, the MCP server, and the accompanying documentation.
+
+════════════════════════════════════════════════════════════════════════
+2. GRANT OF USE
+════════════════════════════════════════════════════════════════════════
+
+You are granted a worldwide, royalty-free, non-exclusive license to:
+
+  (a) Use the Work for any purpose, personal or professional. This
+      expressly includes use inside a company, on an employer's
+      equipment, on client engagements, and in paid consulting work;
+  (b) Modify the Work, including the profile, the council, the
+      workspaces, and the server, for your own use;
+  (c) Copy and share the Work, unmodified and with this license intact;
+  (d) Publish anything you produce using the Work, with no obligation
+      to this license attaching to the output.
+
+Everything you create while using the Work is entirely yours. This
+license claims nothing over your deliverables, your writing, your code,
+or your business.
+
+Nothing in this license requires you to violate an employment agreement,
+a security policy, or a confidentiality obligation. Where a term here
+conflicts with such an obligation, that obligation prevails and the
+conflicting feature of the Work stays switched off. See PORTABLE_O.md
+section 10, workplace mode.
+
+════════════════════════════════════════════════════════════════════════
+3. THE COLLECTIVE INTELLIGENCE OBLIGATION
+════════════════════════════════════════════════════════════════════════
+
+This is the core obligation, and it is narrow on purpose.
+
+  (a) PUBLISHED FORKS COME BACK. If you publicly distribute a modified
+      version of the Work, whether as a fork, a repackaging, a rename,
+      or an embedded copy, you must distribute it under this same
+      license, state clearly that it is modified, and keep the
+      attribution in Section 4. Improvements to a shared method belong
+      to everyone who shares it.
+
+  (b) PRIVATE USE CARRIES NO OBLIGATION. Modifying the Work for
+      yourself, your team, or your employer, without publishing it,
+      triggers nothing in this section. You may keep your changes
+      private forever.
+
+  (c) YOUR RECORDS ARE YOURS. Your profile, your memory files, your
+      council log, your Parallax logs, and your workspace models are
+      your property. Contributing any of them is an invitation, never a
+      requirement, and no term of this license may be read as
+      compelling disclosure of them.
+
+  (d) CONSENT GOVERNS EVERY CONTRIBUTION. Anything you do choose to
+      contribute travels under the consent rules built into the Work
+      (PORTABLE_O.md section 7): anonymized, marked with its consent
+      header, and released only on your explicit confirmation. This
+      license never overrides those rules, and it never requires
+      personal data, client data, or employer data to be shared. The
+      obligation is to share improvements to the method, not
+      information about people.
+
+════════════════════════════════════════════════════════════════════════
+4. ATTRIBUTION
+════════════════════════════════════════════════════════════════════════
+
+Any distributed copy or modified version of the Work must keep:
+
+  (a) This license file;
+  (b) The credit lines in the file footers;
+  (c) The attribution law intact: Council-Driven Convergence is LEED's
+      method, and Parallax and CLAW are devudaaaa Research Lab projects.
+      These attributions may not be merged, swapped, or removed.
+
+Published work produced with the Work needs no citation. If you choose
+to credit it, the acknowledgment is:
+
+      "This work uses alfa_o, built on Council-Driven Convergence by
+       LEED (leed.life), from the devudaaaa Research Lab ecosystem
+       (devudaaaa.xyz)."
+
+════════════════════════════════════════════════════════════════════════
+5. COMMERCIAL USE
+════════════════════════════════════════════════════════════════════════
+
+Using the Work to do your job, run your business, or deliver paid client
+work is free and always will be. No agreement, fee, or notice is needed.
+
+A separate Commercial License Agreement is required only to make the
+Work itself the product. That means:
+
+  (a) Selling the Work, or a modified version of it, for a fee;
+  (b) Hosting it as a paid product or service;
+  (c) Repackaging it, in whole or in substantial part, as a component
+      of a commercial offering sold to third parties;
+  (d) Training a commercial product or service on the Work in order to
+      reproduce or replace it.
+
+Contact devudaaaa.xyz for commercial licensing.
+
+════════════════════════════════════════════════════════════════════════
+6. RESTRICTIONS
+════════════════════════════════════════════════════════════════════════
+
+You may NOT:
+
+  (a) Remove or alter this license, the copyright notices, or the
+      attribution requirements in Section 4;
+  (b) Represent the Work, or the method it carries, as your own;
+  (c) Distribute a modified version without marking it as modified;
+  (d) Use the Work in any way that violates applicable law, or to
+      collect or expose personal data in violation of the consent rules
+      it is built around.
+
+════════════════════════════════════════════════════════════════════════
+7. INTELLECTUAL PROPERTY AND CONTRIBUTIONS
+════════════════════════════════════════════════════════════════════════
+
+The Work, its structure, and its documentation are the joint
+intellectual property of LEED and devudaaaa Research Lab.
+
+Contributions submitted to the official repository, including workspace
+models, council designs, and code, are licensed to the copyright holders
+under these same terms so that they may be redistributed as part of the
+Work. You keep full ownership of your contribution and the unrestricted
+right to use it yourself, anywhere, for anything.
+
+Contributors are credited by the handle they supply. Contributions are
+accepted only in anonymized form, and a contribution containing personal
+data, client data, or employer data will be refused rather than
+sanitized.
+
+════════════════════════════════════════════════════════════════════════
+8. NO WARRANTY
+════════════════════════════════════════════════════════════════════════
+
+THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY ARISING FROM THE WORK OR ITS USE.
+
+The Work is a method for working with AI systems. It does not verify
+their output. You remain responsible for what you ship.
+
+════════════════════════════════════════════════════════════════════════
+9. TERMINATION
+════════════════════════════════════════════════════════════════════════
+
+This license terminates automatically if you fail to comply with
+Section 3(a), Section 4, Section 5, or Section 6, and you do not correct
+the failure within 30 days of being notified of it.
+
+Rights granted to anyone who received the Work from you in compliance
+with this license survive your termination. Your own deliverables,
+produced while the license was in force, are unaffected.
+
+════════════════════════════════════════════════════════════════════════
+
+LEED, leed.life
+devudaaaa Research Lab, devudaaaa.xyz
+
+"The model you rent changes from machine to machine. The method does not."

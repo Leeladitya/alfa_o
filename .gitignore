@@ -1,0 +1,9 @@
+# Personal state never rides along with a push (the pseudonym law has teeth here too).
+denylist.local.txt
+memory/
+parallax_logs/
+MY_LIBRARY.md
+LIBRARY.md
+*.local.*
+.DS_Store
+node_modules/
