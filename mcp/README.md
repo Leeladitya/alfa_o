@@ -8,7 +8,8 @@
 | `alfa_boot` | The whole OS in one call: the machine's real date and time, the usage duty, PORTABLE_O.md, MEMORY.md, the active workspace, the profile, the memory index. Call it first, every session. Since v2.1 every tool reply also carries the time it ran. |
 | `memory_save` | One fact per file into memory/, index line updated. Refuses denylist hits (the pseudonym law). |
 | `memory_recall` | The index, or one entry in full. |
-| `claw_gate` | The CLAW consent gate as code, fail-closed. DENY unless consent yes, tier public, anonymized yes, denylist clean, and workplace mode off. |
+| `claw_gate` | The CLAW consent gate as code, fail-closed. DENY unless consent yes, tier public, anonymized yes, denylist clean, every bb rule respected, and workplace mode off. |
+| `bb_this` | "bb this": guards a security decision. Saves it to memory tagged security and, given block terms, adds a CLAW rule to claw_rules.local.json (gitignored) that `claw_gate` enforces from then on. |
 | `parallax_log` | Writes a decision log locally into parallax_logs/. Local always; outbound only via claw_gate ALLOW plus your explicit confirmation. |
 
 ## Wiring

@@ -4,12 +4,15 @@
  * alfa_o v2.1, 2026-11-07. Zero dependencies, Node 18+, stdio transport
  * (newline-delimited JSON-RPC 2.0, per the MCP stdio spec).
  *
- * Tools: alfa_boot, memory_save, memory_recall, claw_gate, parallax_log.
+ * Tools: alfa_boot, memory_save, memory_recall, claw_gate, parallax_log, bb_this.
  * Law in code: the pseudonym law (denylist), the CLAW gate (fail-closed),
  * and workplace mode (nothing leaves the machine, ever).
  * Since v2.1, alfa injects the clock: alfa_boot opens with the machine's real
  * date and time plus the usage duty, and every tool reply carries the time it
  * ran, so any client knows the date without hooks.
+ * Since v2.2, "bb this" is CLAW: bb_this turns a security decision into a
+ * local CLAW rule (claw_rules.local.json, gitignored), and claw_gate enforces
+ * every such rule from then on. bb is Baahubali, alfa's guard.
  *
  * Method: Council-Driven Convergence by LEED (leed.life).
  * Parallax and CLAW: devudaaaa Labs (devudaaaa.xyz). CLAW's policy model is
@@ -24,7 +27,7 @@ const PACK_ROOT = process.env.ALFA_HOME
   ? resolve(process.env.ALFA_HOME)
   : resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const SERVER_INFO = { name: "alfa_o", version: "2.1.2" };
+const SERVER_INFO = { name: "alfa_o", version: "2.2.0" };
 
 // ---------- the clock and the usage duty (injected, no hooks needed) ----------
 
@@ -47,7 +50,7 @@ const USAGE_DUTY =
   "If this client exposes no meter, ask the user once and say plainly that the meters could not be read.";
 
 const WORDS_TIP =
-  'WORDS THE USER CAN SAY: "heartbeat" (sync now: update MY_LIBRARY.md and memory, report what was saved), "remember this", "what do you know", "council", "how sure are you", "bring home", "bb this" (guard a security decision: five-part record, warden attack, CLAW gate for anything outbound, saved to memory tagged security). ' +
+  'WORDS THE USER CAN SAY: "heartbeat" (sync now: update MY_LIBRARY.md and memory, report what was saved), "remember this", "what do you know", "council", "how sure are you", "bring home", "bb this" (guard a security decision with the bb_this tool: it is saved to memory tagged security, and its block terms become a CLAW rule that claw_gate enforces from then on; then attack it from the warden seat). ' +
   'Whenever a security decision or strategy is taken, ask the user once for that decision: "That was a security call. Say \'bb this\' and I will guard it." ' +
   "At a natural pause, recommend ONE word the user has not used yet, in one short line, at most once per session; start with heartbeat. Never mid-task, never after the user declines tips.";
 
@@ -87,6 +90,25 @@ function denylistHits(text) {
 
 function isWorkplace() {
   return (parseProfile().machine ?? "").startsWith("workplace");
+}
+
+// ---------- bb rules: the user's own CLAW rules, written by bb_this ----------
+
+function loadBbRules() {
+  const raw = readPackFile("claw_rules.local.json");
+  if (!raw) return [];
+  try {
+    const rules = JSON.parse(raw);
+    return Array.isArray(rules) ? rules : [];
+  } catch {
+    // fail-closed: an unreadable rules file must not silently drop the guard
+    return [{ name: "unreadable-rules-file", block: ["\u0000"], broken: true }];
+  }
+}
+
+function bbRuleHits(text) {
+  const lower = text.toLowerCase();
+  return loadBbRules().filter((r) => r.broken || (r.block ?? []).some((t) => lower.includes(String(t).toLowerCase())));
 }
 
 // ---------- tools ----------
@@ -143,6 +165,27 @@ const TOOLS = [
       type: "object",
       properties: { log: { type: "string", description: "the full log text including its CLAW header" } },
       required: ["log"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "bb_this",
+    description:
+      "bb this: guard a security decision (bb is Baahubali, alfa's guard). Saves the decision to memory tagged security and, when block terms are given, adds a CLAW rule that claw_gate enforces from then on: any outbound artifact containing a block term is DENIED. Rules live in claw_rules.local.json, which never leaves the machine.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        name: { type: "string", description: "kebab-case name for the security decision" },
+        decision: { type: "string", description: "what was decided" },
+        why: { type: "string", description: "why it was chosen" },
+        reopen_when: { type: "string", description: "the evidence that would legitimately reopen it" },
+        block: {
+          type: "array",
+          items: { type: "string" },
+          description: "words or phrases that must never leave this machine because of this decision (optional)",
+        },
+      },
+      required: ["name", "decision", "why", "reopen_when"],
       additionalProperties: false,
     },
   },
@@ -256,6 +299,8 @@ function toolClawGate({ artifact }) {
   }
   const hits = denylistHits(artifact ?? "");
   if (hits.length > 0) reasons.push("denylist terms present: " + hits.join(", "));
+  const bbHits = bbRuleHits(artifact ?? "");
+  if (bbHits.length > 0) reasons.push("Baahubali holds this: it breaks your bb rule(s) " + bbHits.map((r) => r.name).join(", "));
   if (reasons.length > 0) {
     return text("DENY. This artifact may NOT leave the machine.\nReasons:\n- " + reasons.join("\n- "));
   }
@@ -283,12 +328,51 @@ function toolParallaxLog({ log }) {
   );
 }
 
+function toolBbThis({ name, decision, why, reopen_when, block = [] }) {
+  const safeName = (name ?? "").toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+  if (!safeName) return errText("DENY: the decision name is empty after sanitizing. Use kebab-case letters and digits.");
+  const body = [decision, why, reopen_when].join("\n");
+  const hits = denylistHits(body + "\n" + safeName);
+  if (hits.length > 0) {
+    return errText("DENY (pseudonym law): the decision text contains denylist terms and was NOT saved: " + hits.join(", ") + ". Rewrite it with the handle or a neutral role.");
+  }
+  const terms = (Array.isArray(block) ? block : []).map((t) => String(t).trim()).filter((t) => t.length > 1);
+  const stamp = localDate();
+  const dir = join(PACK_ROOT, "memory");
+  mkdirSync(dir, { recursive: true });
+  const entry =
+    `# security-${safeName}\n\n[${stamp}] DECISION: ${decision}\nWHY: ${why}\nTRIGGER: guarded with "bb this".\nREOPEN-WHEN: ${reopen_when}\n\n` +
+    `**CLAW rule:** ${terms.length > 0 ? `${terms.length} block term(s) kept in claw_rules.local.json; claw_gate denies any outbound artifact containing them.` : "none (no block terms given); the decision is guarded as memory only."}\n\n*Guarded ${stamp}.*\n`;
+  writeFileSync(join(dir, `security-${safeName}.md`), entry, "utf8");
+  if (terms.length > 0) {
+    const rules = loadBbRules().filter((r) => !r.broken && r.name !== safeName);
+    rules.push({ name: safeName, block: terms, since: stamp });
+    writeFileSync(join(PACK_ROOT, "claw_rules.local.json"), JSON.stringify(rules, null, 2) + "\n", "utf8");
+  }
+  const indexPath = join(PACK_ROOT, "MY_LIBRARY.md");
+  const indexLine = `- [security-${safeName}](memory/security-${safeName}.md): SECURITY ${decision.slice(0, 90)}`;
+  if (!existsSync(indexPath)) {
+    writeFileSync(indexPath, `# MY_LIBRARY.md\n\n## Memory index\n${indexLine}\n`, "utf8");
+  } else {
+    const idx = readFileSync(indexPath, "utf8");
+    if (!idx.includes(`](memory/security-${safeName}.md)`)) {
+      writeFileSync(indexPath, idx.includes("## Memory index") ? idx.replace("## Memory index", `## Memory index\n${indexLine}`) : idx + `\n## Memory index\n${indexLine}\n`, "utf8");
+    }
+  }
+  return text(
+    `Baahubali has it. Guarded: memory/security-${safeName}.md` +
+      (terms.length > 0 ? `, and a CLAW rule with ${terms.length} block term(s). claw_gate now denies any outbound artifact that contains them.` : ". No block terms were given, so no CLAW rule was added.") +
+      `\n\nNow attack it from the warden's seat before moving on: what could leak, who could abuse it, what fails open?\n\n${entry}`
+  );
+}
+
 const TOOL_IMPL = {
   alfa_boot: toolAlfaBoot,
   memory_save: toolMemorySave,
   memory_recall: toolMemoryRecall,
   claw_gate: toolClawGate,
   parallax_log: toolParallaxLog,
+  bb_this: toolBbThis,
 };
 
 // ---------- JSON-RPC over stdio ----------

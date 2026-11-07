@@ -105,7 +105,7 @@ try {
 
   const list = await rpc("tools/list", {});
   const names = (list.result?.tools ?? []).map((t) => t.name).sort();
-  check("tools/list exposes the five tools", "a tool silently missing from the surface", JSON.stringify(names) === JSON.stringify(["alfa_boot", "claw_gate", "memory_recall", "memory_save", "parallax_log"]), names.join(", "));
+  check("tools/list exposes the six tools", "a tool silently missing from the surface", JSON.stringify(names) === JSON.stringify(["alfa_boot", "bb_this", "claw_gate", "memory_recall", "memory_save", "parallax_log"]), names.join(", "));
 
   const boot = await rpc("tools/call", { name: "alfa_boot", arguments: {} });
   const bootText = toolText(boot);
@@ -143,6 +143,24 @@ try {
   const logDir = join(FIXTURE, "parallax_logs");
   const logFiles = existsSync(logDir) ? readdirSync(logDir) : [];
   check("parallax_log writes the log file locally", "SAVED reported with no file on disk", toolText(logSave).startsWith("SAVED") && logFiles.length === 1, toolText(logSave) + "\n         files: " + logFiles.join(", "));
+
+  // bb this: a security decision becomes a CLAW rule the gate enforces
+  const bb = await rpc("tools/call", { name: "bb_this", arguments: { name: "no-cluster-names-out", decision: "Internal cluster names never leave this machine", why: "they map the network for an attacker", reopen_when: "the cluster is decommissioned", block: ["ORION-PROD-7"] } });
+  const rulesPath = join(FIXTURE, "claw_rules.local.json");
+  const rulesOnDisk = existsSync(rulesPath) ? readFileSync(rulesPath, "utf8") : "(NO RULES FILE)";
+  const secEntry = existsSync(join(FIXTURE, "memory", "security-no-cluster-names-out.md")) ? readFileSync(join(FIXTURE, "memory", "security-no-cluster-names-out.md"), "utf8") : "(NOT WRITTEN)";
+  check("bb_this writes the security memory AND the CLAW rule", "bb this reporting guarded while nothing reached the gate", toolText(bb).startsWith("Baahubali has it") && rulesOnDisk.includes("ORION-PROD-7") && secEntry.includes("DECISION: Internal cluster names"), rulesOnDisk + "\n---- memory ----\n" + secEntry);
+
+  const gateBb = await rpc("tools/call", { name: "claw_gate", arguments: { artifact: PUBLIC_LOG.replace("anonymized.", "anonymized, on ORION-PROD-7.") } });
+  check("claw_gate DENIES a clean public artifact that breaks a bb rule, naming the rule but not the term", "a bb decision recorded in memory but never enforced at the gate, or the gate echoing the secret it guards", toolText(gateBb).startsWith("DENY") && toolText(gateBb).includes("no-cluster-names-out") && !toolText(gateBb).includes("ORION-PROD-7"), toolText(gateBb));
+
+  const gateStillOk = await rpc("tools/call", { name: "claw_gate", arguments: { artifact: PUBLIC_LOG } });
+  check("claw_gate still ALLOWS a clean artifact that breaks no bb rule", "a bb rule that blocks everything, which trains users to bypass the gate", toolText(gateStillOk).startsWith("ALLOW"), toolText(gateStillOk));
+
+  writeFileSync(rulesPath, "{ this is not json");
+  const gateBroken = await rpc("tools/call", { name: "claw_gate", arguments: { artifact: PUBLIC_LOG } });
+  check("claw_gate DENIES when the bb rules file is unreadable (fail-closed)", "a corrupted rules file silently dropping every guard", toolText(gateBroken).startsWith("DENY") && toolText(gateBroken).includes("unreadable-rules-file"), toolText(gateBroken));
+  rmSync(rulesPath);
 
   // workplace mode: flip the fixture profile and verify the gate slams shut
   writeFileSync(join(FIXTURE, "PORTABLE_O.md"), readFileSync(join(FIXTURE, "PORTABLE_O.md"), "utf8").replace("machine: personal", "machine: workplace"));
