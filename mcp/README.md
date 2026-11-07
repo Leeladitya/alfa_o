@@ -1,5 +1,5 @@
 # The alfa_o MCP server
-### One file, zero dependencies, Node 18 or newer. It loads the alfa_o operating system into any MCP-capable client: VS Code, Claude Code, Claude Desktop, Cursor, or anything else that speaks the protocol. This is how the method rides along on EVERY machine, whatever model that machine happens to have.
+### A few small files, zero dependencies, Node 18 or newer. It loads the alfa_o operating system into any MCP-capable client: VS Code, Claude Code, Claude Desktop, Cursor, or anything else that speaks the protocol. This is how the method rides along on EVERY machine, whatever model that machine happens to have.
 
 ## What it serves
 
@@ -9,6 +9,8 @@
 | `memory_save` | One fact per file into memory/, index line updated. Refuses denylist hits (the pseudonym law). |
 | `memory_recall` | The index, or one entry in full. |
 | `claw_gate` | The CLAW consent gate as code, fail-closed. DENY unless consent yes, tier public, anonymized yes, denylist clean, every bb rule respected, and workplace mode off. |
+| `alfa_exec` | Runs one shell command through Baahubali. CLAW judges it first (`claw/policy.json`): local runs; outbound, destructive and install wait for `human_approved: true`; anything that breaks a wall or touches the core is denied; nothing outbound on a work machine. Audited by fingerprint, never by text. |
+| `alfa_maturity` | Measures maturity (Seed, Living, Disciplined, Circle-ready) from content that must resolve on disk, with the address of every criterion. Unlocks nothing. |
 | `bb_this` | "bb this": guards a security decision. Saves it to memory tagged security and, given block terms, adds a CLAW rule to claw_rules.local.json (gitignored) that `claw_gate` enforces from then on. |
 | `parallax_log` | Writes a decision log locally into parallax_logs/. Local always; outbound only via claw_gate ALLOW plus your explicit confirmation. |
 

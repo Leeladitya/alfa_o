@@ -105,7 +105,7 @@ try {
 
   const list = await rpc("tools/list", {});
   const names = (list.result?.tools ?? []).map((t) => t.name).sort();
-  check("tools/list exposes the six tools", "a tool silently missing from the surface", JSON.stringify(names) === JSON.stringify(["alfa_boot", "bb_this", "claw_gate", "memory_recall", "memory_save", "parallax_log"]), names.join(", "));
+  check("tools/list exposes the eight tools", "a tool silently missing from the surface", JSON.stringify(names) === JSON.stringify(["alfa_boot", "alfa_exec", "alfa_maturity", "bb_this", "claw_gate", "memory_recall", "memory_save", "parallax_log"]), names.join(", "));
 
   const boot = await rpc("tools/call", { name: "alfa_boot", arguments: {} });
   const bootText = toolText(boot);

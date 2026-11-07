@@ -4,7 +4,8 @@
  * alfa_o v2.1, 2026-11-07. Zero dependencies, Node 18+, stdio transport
  * (newline-delimited JSON-RPC 2.0, per the MCP stdio spec).
  *
- * Tools: alfa_boot, memory_save, memory_recall, claw_gate, parallax_log, bb_this.
+ * Tools: alfa_boot, memory_save, memory_recall, claw_gate, parallax_log, bb_this,
+ * alfa_exec, alfa_maturity.
  * Law in code: the pseudonym law (denylist), the CLAW gate (fail-closed),
  * and workplace mode (nothing leaves the machine, ever).
  * Since v2.1, alfa injects the clock: alfa_boot opens with the machine's real
@@ -13,6 +14,10 @@
  * Since v2.2, "bb this" is CLAW: bb_this turns a security decision into a
  * local CLAW rule (claw_rules.local.json, gitignored), and claw_gate enforces
  * every such rule from then on. bb is Baahubali, alfa's guard.
+ * Since v2.3: the seal (seal.mjs) is checked at every boot and names the
+ * edition; Baahubali's walls (walls.mjs, baahubali.mjs) back alfa_exec, which
+ * runs a shell command only after CLAW judges it; alfa_maturity measures this
+ * alfa's maturity from evidence that must resolve, never from claims.
  *
  * Method: Council-Driven Convergence by LEED (leed.life).
  * Parallax and CLAW: devudaaaa Labs (devudaaaa.xyz). CLAW's policy model is
@@ -22,12 +27,15 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync, appendFileSync } from "node:fs";
 import { join, dirname, resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
+import { checkSeal, sealLine } from "./seal.mjs";
+import { wallHits, evaluateCommand, audit } from "./walls.mjs";
 
 const PACK_ROOT = process.env.ALFA_HOME
   ? resolve(process.env.ALFA_HOME)
   : resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const SERVER_INFO = { name: "alfa_o", version: "2.2.0" };
+const SERVER_INFO = { name: "alfa_o", version: "2.3.0" };
 
 // ---------- the clock and the usage duty (injected, no hooks needed) ----------
 
@@ -62,7 +70,8 @@ function readPackFile(name) {
 }
 
 function parseProfile() {
-  const core = readPackFile("PORTABLE_O.md") ?? "";
+  // since v2.3 the user's answers live in profile.local.md (gitignored); the block in PORTABLE_O.md is the blank template
+  const core = readPackFile("profile.local.md") ?? readPackFile("PORTABLE_O.md") ?? "";
   const m = core.match(/=== PROFILE[^=]*===([\s\S]*?)=== END PROFILE ===/);
   const profile = {};
   if (m) {
@@ -91,6 +100,17 @@ function denylistHits(text) {
 function isWorkplace() {
   return (parseProfile().machine ?? "").startsWith("workplace");
 }
+
+function editionLine() {
+  const s = checkSeal(PACK_ROOT);
+  if (isWorkplace()) return "EDITION: work. Nothing leaves this machine, the Circle is never offered, and it is free for the person using it.";
+  if (s.status === "official") return `EDITION: ${s.edition}.`;
+  return `EDITION: public (the seal could not confirm ${s.status === "modified" ? "an unmodified build" : "a lineage"}).`;
+}
+
+const BAAHUBALI_DUTY =
+  "BAAHUBALI (the guard): before any command that could send data out, delete, install, or touch the core, write one pre-flight line naming the command, its CLAW category (outbound, destructive, install, root, local) and the verdict; " +
+  "route such commands through alfa_exec, which judges them in code; and ask the human before anything outbound or destructive. A missing pre-flight line is itself a breach.";
 
 // ---------- bb rules: the user's own CLAW rules, written by bb_this ----------
 
@@ -189,6 +209,27 @@ const TOOLS = [
       additionalProperties: false,
     },
   },
+  {
+    name: "alfa_exec",
+    description:
+      "Run one shell command through Baahubali. CLAW judges it in code first: commands that break a wall (a denylist term, a bb rule, a tripwire, the sealed core, anything outbound on a work machine) are DENIED; outbound, destructive and install commands are HELD until the human has said yes, which you confirm by setting human_approved; plain local commands run. Use this for every command that could send data out, delete, install, or touch the core.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        command: { type: "string", description: "the shell command" },
+        human_approved: { type: "boolean", description: "true only if the human explicitly approved THIS command in this conversation" },
+        cwd: { type: "string", description: "working directory (optional)" },
+      },
+      required: ["command"],
+      additionalProperties: false,
+    },
+  },
+  {
+    name: "alfa_maturity",
+    description:
+      "Measure this alfa's maturity level (0 Seed, 1 Living, 2 Disciplined, 3 Circle-ready) from evidence that must resolve on disk: real memory entries with content, decisions in five parts, corrections, security calls, consented logs over weeks. Counts content, never claims. Reports every criterion with its address. Unlocks nothing; at level 3 it tells you to inform the master.",
+    inputSchema: { type: "object", properties: {}, additionalProperties: false },
+  },
 ];
 
 function text(s) {
@@ -211,7 +252,7 @@ function parseClawHeader(artifact) {
 
 function toolAlfaBoot() {
   const profile = parseProfile();
-  const parts = [nowLine() + "\n" + USAGE_DUTY + "\n" + WORDS_TIP];
+  const parts = [nowLine() + "\n" + sealLine(PACK_ROOT) + "\n" + editionLine() + "\n" + USAGE_DUTY + "\n" + WORDS_TIP + "\n" + BAAHUBALI_DUTY];
   const core = readPackFile("PORTABLE_O.md");
   const council = readPackFile("MEMORY.md");
   const index = readPackFile("MY_LIBRARY.md");
@@ -301,6 +342,7 @@ function toolClawGate({ artifact }) {
   if (hits.length > 0) reasons.push("denylist terms present: " + hits.join(", "));
   const bbHits = bbRuleHits(artifact ?? "");
   if (bbHits.length > 0) reasons.push("Baahubali holds this: it breaks your bb rule(s) " + bbHits.map((r) => r.name).join(", "));
+  for (const h of wallHits(PACK_ROOT, artifact ?? "").filter((x) => x.includes("TRIPWIRE"))) reasons.push("Baahubali holds this: it carries " + h);
   if (reasons.length > 0) {
     return text("DENY. This artifact may NOT leave the machine.\nReasons:\n- " + reasons.join("\n- "));
   }
@@ -366,6 +408,106 @@ function toolBbThis({ name, decision, why, reopen_when, block = [] }) {
   );
 }
 
+function toolAlfaExec({ command, human_approved = false, cwd }) {
+  const cmd = String(command ?? "").trim();
+  if (!cmd) return errText("DENY: empty command.");
+  const r = evaluateCommand(PACK_ROOT, cmd);
+  const label = `[${r.categories.join(", ")}]`;
+  if (r.verdict === "deny") {
+    audit(PACK_ROOT, { layer: "alfa_exec", verdict: "deny", categories: r.categories, command: cmd });
+    return errText(`Baahubali: DENY ${label}. Not run.\n- ${r.reasons.join("\n- ")}`);
+  }
+  if (r.verdict === "ask" && human_approved !== true) {
+    audit(PACK_ROOT, { layer: "alfa_exec", verdict: "held", categories: r.categories, command: cmd });
+    return errText(`Baahubali: HELD ${label}. Not run. ${r.reasons.join("; ")}. Show the human the exact command, get an explicit yes, then call again with human_approved: true.`);
+  }
+  audit(PACK_ROOT, { layer: "alfa_exec", verdict: r.verdict === "ask" ? "approved" : "allow", categories: r.categories, command: cmd });
+  let out;
+  let code = 0;
+  try {
+    out = execFileSync("/bin/sh", ["-c", cmd], { cwd: cwd ? resolve(cwd) : process.cwd(), encoding: "utf8", timeout: 120000, maxBuffer: 4 * 1024 * 1024, stdio: ["ignore", "pipe", "pipe"] });
+  } catch (e) {
+    code = e.status ?? 1;
+    out = String(e.stdout ?? "") + String(e.stderr ?? "");
+  }
+  const trimmed = out.length > 8000 ? out.slice(0, 8000) + `\n[... ${out.length - 8000} more characters cut]` : out;
+  return text(`Baahubali: ran ${label}, exit ${code}.\n${trimmed}`);
+}
+
+// ---------- maturity: content, never counts of claims ----------
+
+function memoryEntries() {
+  const dir = join(PACK_ROOT, "memory");
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir).filter((f) => f.endsWith(".md")).map((f) => ({ file: "memory/" + f, text: readFileSync(join(dir, f), "utf8") }));
+}
+
+function fivePartDecisions(textBlob) {
+  const out = [];
+  const re = /DECISION:([^\n]*)\n\s*WHY:([^\n]*)\n\s*TRIGGER:([^\n]*)\n\s*REOPEN-WHEN:([^\n]*)/g;
+  let m;
+  while ((m = re.exec(textBlob))) if ([m[1], m[2], m[3], m[4]].every((x) => x.trim().length >= 10)) out.push(m[1].trim());
+  return out;
+}
+
+function toolAlfaMaturity() {
+  const rows = [];
+  const add = (level, label, ok, address) => rows.push({ level, label, ok, address });
+  const profile = parseProfile();
+  const seal = checkSeal(PACK_ROOT);
+  const work = isWorkplace();
+
+  add(0, "profile set (the setup interview ran)", !!profile.handle && profile.handle !== "unset", existsSync(join(PACK_ROOT, "profile.local.md")) ? "profile.local.md" : "PORTABLE_O.md profile block");
+  add(0, "known lineage (seal official or modified)", seal.status !== "unknown", "seal/: " + seal.status);
+
+  const entries = memoryEntries();
+  const real = entries.filter((e) => {
+    const fact = e.text.split("\n").slice(2).join(" ").split("**Why:**")[0].trim();
+    const why = (e.text.match(/\*\*Why:\*\*([^\n]*)/) ?? [])[1] ?? "";
+    const how = (e.text.match(/\*\*How to apply:\*\*([^\n]*)/) ?? [])[1] ?? "";
+    const isSecurity = e.file.startsWith("memory/security-") && /DECISION:.{10,}/.test(e.text);
+    return isSecurity || (fact.length >= 40 && why.trim().length >= 10 && how.trim().length >= 10);
+  });
+  const days = new Set(real.map((e) => (e.text.match(/(?:Saved|Guarded) (\d{4}-\d{2}-\d{2})/) ?? [])[1]).filter(Boolean));
+  const index = readPackFile("MY_LIBRARY.md") ?? "";
+  const linked = [...index.matchAll(/\]\((memory\/[^)]+)\)/g)].map((m) => m[1]);
+  const dangling = linked.filter((f) => !existsSync(join(PACK_ROOT, f)));
+  add(1, "at least 5 memory entries with real content (fact 40+ chars, why and how 10+ each)", real.length >= 5, `memory/: ${real.length} real of ${entries.length}`);
+  add(1, "saved on at least 3 different days (a one-day burst does not count)", days.size >= 3, `distinct days: ${[...days].sort().join(", ") || "none"}`);
+  add(1, "every index line points to a file that exists", index.length > 0 && dangling.length === 0, index ? (dangling.length ? "MY_LIBRARY.md dangling: " + dangling.join(", ") : "MY_LIBRARY.md: all links resolve") : "no MY_LIBRARY.md");
+
+  const decisions = fivePartDecisions(index + "\n" + entries.map((e) => e.text).join("\n"));
+  const corrections = (index.split("## Corrections")[1] ?? "").split("\n## ")[0].split("\n").filter((l) => /^-\s+\S.{10,}/.test(l));
+  const security = entries.filter((e) => e.file.startsWith("memory/security-"));
+  add(2, "at least 3 decisions written in all five parts", decisions.length >= 3, `found ${decisions.length} in MY_LIBRARY.md and memory/`);
+  add(2, "at least 1 correction recorded as permanent law", corrections.length >= 1, `MY_LIBRARY.md Corrections: ${corrections.length}`);
+  add(2, 'at least 1 security call guarded with "bb this"', security.length >= 1, `memory/security-*: ${security.length}`);
+
+  const logsDir = join(PACK_ROOT, "parallax_logs");
+  const logs = existsSync(logsDir) ? readdirSync(logsDir).filter((f) => /^\d{4}-\d{2}-\d{2}/.test(f)) : [];
+  const goodLogs = logs.filter((f) => {
+    const h = parseClawHeader(readFileSync(join(logsDir, f), "utf8"));
+    return h && h.consent === "yes" && h.anonymized === "yes";
+  });
+  const span = goodLogs.length ? (Date.parse(goodLogs.sort().at(-1).slice(0, 10)) - Date.parse(goodLogs.sort()[0].slice(0, 10))) / 86400000 : 0;
+  add(3, "not a work machine (the Circle is never offered at work)", !work, `profile machine: ${profile.machine ?? "unset"}`);
+  add(3, "at least 3 consented, anonymized Parallax logs", goodLogs.length >= 3, `parallax_logs/: ${goodLogs.length} consented of ${logs.length}`);
+  add(3, "steady over at least 3 weeks", span >= 21, `first to last consented log: ${Math.round(span)} days`);
+  add(3, "the user chose to contribute", profile.parallax_logs === "contribute", `profile parallax_logs: ${profile.parallax_logs ?? "unset"}`);
+
+  let level = -1;
+  for (const l of [0, 1, 2, 3]) {
+    if (rows.filter((r) => r.level === l).every((r) => r.ok)) level = l;
+    else break;
+  }
+  const names = ["Seed", "Living", "Disciplined", "Circle-ready"];
+  const lines = rows.map((r) => `  L${r.level} ${r.ok ? "PASS" : "....."} ${r.label}\n         address: ${r.address}`);
+  let verdict = level < 0 ? "Level: not yet Seed. Finish setup first." : `Level ${level}: ${names[level]}.`;
+  if (level === 3) verdict += " Tell your master: this alfa is ready to be invited to the Circle. Joining needs an invitation signed by goldpack; nothing unlocks on its own.";
+  if (work) verdict += " This is a work machine: levels 0 to 2 are for you, and the Circle is never offered here.";
+  return text(`MATURITY (measured from content on disk, not from claims)\n${verdict}\n\n${lines.join("\n")}`);
+}
+
 const TOOL_IMPL = {
   alfa_boot: toolAlfaBoot,
   memory_save: toolMemorySave,
@@ -373,6 +515,8 @@ const TOOL_IMPL = {
   claw_gate: toolClawGate,
   parallax_log: toolParallaxLog,
   bb_this: toolBbThis,
+  alfa_exec: toolAlfaExec,
+  alfa_maturity: toolAlfaMaturity,
 };
 
 // ---------- JSON-RPC over stdio ----------

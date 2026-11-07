@@ -1,0 +1,26 @@
+{
+  "format": "claw-policy/1",
+  "about": "The CLAW rulebook for alfa, compiled into the sealed core. The agent's instructions (PORTABLE_O.md) and alfa's code (walls.mjs) read the same rules from this one file. CLAW is a devudaaaa Labs project; this file applies its policy model as a pattern.",
+  "categories": {
+    "outbound": {
+      "meaning": "sends data off this machine",
+      "verdict": "ask; deny on a work machine",
+      "patterns": ["\\bcurl\\b", "\\bwget\\b", "\\bssh\\b", "\\bscp\\b", "\\bsftp\\b", "\\brsync\\b[^|;&]*:", "\\bgit\\s+push\\b", "\\bnc\\b", "\\bnetcat\\b", "\\bftp\\b", "\\btelnet\\b", "Invoke-WebRequest", "\\bgh\\s+(pr|issue|release|api|gist|repo)\\b", "\\baws\\s+s3\\s+(cp|sync|mv)\\b", "\\bgsutil\\b"]
+    },
+    "destructive": {
+      "meaning": "deletes or overwrites data in a way that is hard to undo",
+      "verdict": "ask",
+      "patterns": ["\\brm\\s+-[a-zA-Z]*[rRf]", "\\bDROP\\s+(TABLE|DATABASE|SCHEMA)\\b", "\\bTRUNCATE\\b", "\\bDELETE\\s+FROM\\b", "\\bgit\\s+reset\\s+--hard\\b", "\\bgit\\s+clean\\s+-[a-zA-Z]*f", "\\bgit\\s+push\\s+.*--force", "\\bmkfs\\b", "\\bdd\\s+if=", "\\bshred\\b"]
+    },
+    "install": {
+      "meaning": "installs or runs software fetched from elsewhere",
+      "verdict": "ask",
+      "patterns": ["\\bnpm\\s+(i|install|add)\\b", "\\bnpx\\b", "\\bpip3?\\s+install\\b", "\\bbrew\\s+install\\b", "\\bapt(-get)?\\s+install\\b", "(curl|wget)[^|]*\\|\\s*(sh|bash|zsh|python)"]
+    },
+    "root": {
+      "meaning": "changes the sealed core (only a signed release may do that)",
+      "verdict": "deny",
+      "write_patterns": ["\\bchmod\\b", "\\bchown\\b", "\\bmv\\b", "\\brm\\b", "\\bsed\\s+-i", "\\btee\\b", ">", "\\bcp\\b", "\\btruncate\\b"]
+    }
+  }
+}
