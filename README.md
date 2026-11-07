@@ -67,6 +67,20 @@ You never have to learn the system. Just say one of these, any time:
 
 Your alfa will suggest one of these when the moment is right, once, and then leave you alone. Start with **heartbeat**. It is the one that keeps everything else alive. And whenever you make a security decision or set a strategy, it will ask you to **bb this**.
 
+## Tapes: take your alfa with you
+
+Your alfa's home (memory, library, logs, your own workspaces) can travel on a tape. The core never does, so a tape can never change how anyone's alfa is governed.
+
+```bash
+node tapes/tape.mjs record . my-backup.alfatape                                    # a backup tape for yourself
+node tapes/tape.mjs play my-backup.alfatape ~/new-machine/alfa_o                   # shows the plan, changes nothing
+node tapes/tape.mjs play my-backup.alfatape ~/new-machine/alfa_o --yes             # plays it
+node tapes/tape.mjs keygen friend                                                  # your friend makes keys once
+node tapes/tape.mjs record . for-friend.alfatape --kind share --to friend.pub      # only your friend can open it
+```
+
+An empty tape never reports success. A share tape leaves your profile, real-name list and rules behind, and refuses to record if anything in it breaks a wall. Playing never overwrites: if a file already exists, the tape's version lands beside it. On a work machine you can back up in place, but nothing is shared out or played in.
+
 ## At work
 
 Most people cannot choose their AI at their job. The company picks the model, the editor, and the rules.
@@ -83,6 +97,7 @@ A strong model with no method wastes its strength. A method in plain text runs a
 | MEMORY.md | The council module: how to build your OWN council of minds (each seat a dissection plus a lens), convene it per problem, and keep the council log that slowly becomes a memory of your own judgment. |
 | workspaces/ | The system tuned to one line of work. TEMPLATE.md to build yours, and a worked example beside it: a data consultant building warehouse pipelines that risk teams model on. |
 | mcp/ | A zero-dependency MCP server (Node 18+) that loads the whole system into any MCP client, keeps your memory, puts the CLAW gate into code, turns every "bb this" into a CLAW rule, injects the clock, checks the seal, runs risky commands only through Baahubali (`alfa_exec`), and measures maturity from evidence (`alfa_maturity`). Also here: `seal.mjs`, `baahubali.mjs`, `walls.mjs`, and two smoke tests that print what they checked, not just PASS. |
+| tapes/ | `tape.mjs`: record your alfa's home onto a tape and play it on a new machine, or seal it so only one friend can open it. Never carries the core. Tested by `tape-smoke-test.mjs`. |
 | claw/ | The CLAW rulebook (`policy.json`): what counts as outbound, destructive, install, or a change to the core. The instructions and the code read the same file. |
 | CLAUDE.md | A three-line drop-in for Claude Code folders that points the session at PORTABLE_O.md and enforces the end-of-session rituals. |
 
@@ -117,7 +132,6 @@ v2.1 is a small release with a lot behind it. Here is what is being built. No da
 - **A seal on every copy.** Your alfa will tell you whether it is official, modified, or of unknown origin, and keep working either way.
 - **alfas that talk to each other**, safely: every message checked on arrival, and nothing another alfa says is ever taken as an order.
 - **Growing up on evidence.** Your alfa will measure its own maturity from what it has actually done, not from what it claims, and tell you when it is ready for more.
-- **Tapes.** Record your alfa and play it on a new machine, or hand it to a friend.
 - **alfa meets your apps.** Your alfa will plug into the tools you already use and carry its method in with it. The first one is LEAP.
 
 ### Launch checklist
@@ -127,13 +141,14 @@ v2.1 is a small release with a lot behind it. Here is what is being built. No da
 - [x] bb this becomes CLAW: every guarded decision updates the gate (v2.2)
 - [x] **The seal.** Every copy knows where it came from: official, modified, or unknown (v2.3)
 - [x] **Baahubali.** The guard that holds the walls in every AI app (v2.3)
-- [ ] **Tapes.** Carry your alfa to a new machine, or hand it to a friend (alfa_taperecorder v0.1, coming with it)
+- [x] **Tapes.** Carry your alfa to a new machine, or hand it to a friend (v2.3.1)
 - [ ] **Growing up on evidence.** The measuring is in v2.3; the Circle invitation comes later.
 
 Come explore v2.1. The revolution is in the method, and it is just getting started.
 
 ## Changelog
 
+- **v2.3.1 (2026-11-07). Tapes.** `tapes/tape.mjs` records an alfa's home onto a backup or share tape and plays it into another alfa: home only, never the core; a content floor that counts knowledge, so an empty tape never reports success; share tapes scrubbed and sealed to one receiver (X25519 and AES-256-GCM); playing shows the plan first and never overwrites; work machines back up only. 9 checks. Outside the sealed core, so the seal still reads official 2.3.0.
 - **v2.3 (2026-11-07). The seal and Baahubali.** (1) **The seal** (`mcp/seal.mjs`): goldpack's offline root key certifies a release key, the release key signs a manifest of every core file with its edition, and every boot reports official, modified (naming the files), or lineage unknown. A forged edition tag breaks the signature. It never locks anyone out. (2) **Baahubali** (`mcp/baahubali.mjs`, `mcp/walls.mjs`, `claw/policy.json`): the core locked read-only on disk; a git pre-commit gatekeeper that holds real names, personal files, bb-guarded terms, tripwire text and unreleased core changes, under every AI agent; tripwire decoys; and `alfa_exec`, which runs a shell command only after CLAW judges it (plain local commands run, outbound, destructive and install commands wait for the human's yes, anything that breaks a wall or touches the core is denied, and nothing outbound ever runs on a work machine). (3) **Editions**: the seal names the edition, and a work machine always runs as Work. (4) **`alfa_maturity`**: Seed, Living, Disciplined, Circle-ready, measured from content that must resolve on disk; a one-day burst of entries or an empty entry scores nothing. (5) **Your profile moves to `profile.local.md`** (gitignored), so your answers never sit in a tracked file. Tests: 19 original checks plus 19 new ones; four deliberate breaks were each caught by the check meant for them.
 
 - **v2.2 (2026-11-07). bb this is CLAW, and the sharing terms by edition.** Public shares only on the user's yes; the coming Circle gives anonymized logs back as the price of membership; Work never shares and is always free. The licence stays v1.0. A new tool, `bb_this`, turns a security decision into a local CLAW rule: the decision is saved to memory tagged security, its block terms go into `claw_rules.local.json` (which never leaves the machine), and `claw_gate` denies any outbound artifact that breaks a rule, naming the rule without repeating the secret. An unreadable rules file makes the gate deny everything until it is fixed. The smoke test grows to 19 checks, and the two enforcement checks were proven to fail when enforcement is removed.
