@@ -24,7 +24,7 @@ const PACK_ROOT = process.env.ALFA_HOME
   ? resolve(process.env.ALFA_HOME)
   : resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const SERVER_INFO = { name: "alfa_o", version: "2.1.0" };
+const SERVER_INFO = { name: "alfa_o", version: "2.1.1" };
 
 // ---------- the clock and the usage duty (injected, no hooks needed) ----------
 
@@ -45,6 +45,10 @@ const USAGE_DUTY =
   "USAGE DUTY: read the plan or usage meters at session start, before starting any parallel work, and after each milestone. " +
   "At 70% on any meter, go lean (smaller steps, no fan-out); at 85%, wrap up and write the heartbeat. " +
   "If this client exposes no meter, ask the user once and say plainly that the meters could not be read.";
+
+const WORDS_TIP =
+  'WORDS THE USER CAN SAY: "heartbeat" (sync now: update MY_LIBRARY.md and memory, report what was saved), "remember this", "what do you know", "council", "how sure are you", "bring home". ' +
+  "At a natural pause, recommend ONE word the user has not used yet, in one short line, at most once per session; start with heartbeat. Never mid-task, never after the user declines tips.";
 
 // ---------- pack access ----------
 
@@ -163,7 +167,7 @@ function parseClawHeader(artifact) {
 
 function toolAlfaBoot() {
   const profile = parseProfile();
-  const parts = [nowLine() + "\n" + USAGE_DUTY];
+  const parts = [nowLine() + "\n" + USAGE_DUTY + "\n" + WORDS_TIP];
   const core = readPackFile("PORTABLE_O.md");
   const council = readPackFile("MEMORY.md");
   const index = readPackFile("MY_LIBRARY.md");

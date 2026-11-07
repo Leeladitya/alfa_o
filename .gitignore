@@ -7,7 +7,7 @@ LIBRARY.md
 *.local.*
 .DS_Store
 node_modules/
-# LEED-internal cells and the hook-based guard, which ships in a later release (v2.1 is pre-guard).
+# Internal working files, and components that ship in a later release.
 retrograde.MD
 PARALLAX-LOG.md
 hooks/

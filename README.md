@@ -1,75 +1,103 @@
 # alfa_o
 
-### One file that makes any AI prove what it tells you, remember what you decided, and argue with itself before it answers. Same model, better answers. Works on every model, every editor, every machine, including the locked down one at work.
+### Your AI is smart. It is not careful. alfa_o is the method that makes it careful.
+
+One text file that makes any AI prove what it tells you, remember what you decided, and argue with itself before it answers. Same model, better answers. Every model, every editor, every machine, including the locked down one at work.
 
 ---
 
-## The thirty second version
+## Thirty seconds
 
-Here is a real failure, and it is the kind everybody has lived through.
+Someone asks an AI to set up a weekly backup. It writes the script, runs it, and reports: **"Done. Backup configured and integrity verified."** Every week the log says the same thing.
 
-Someone asks an AI to set up a weekly backup. It writes the script, runs it, and reports: **"Done. Backup configured and integrity verified."** Every week after that, the log says the same thing. Integrity verified.
+Two weeks later, every archive turns out to be empty. An empty zip is a valid zip, so it passed the exit code, the file check, and the integrity test. The check could never fail, because it was never able to see the thing that actually went wrong.
 
-Two weeks later, the archives turn out to be empty. All of them. An empty zip is a valid zip, so it passed the exit code, it passed the file check, it passed the integrity test. The check could not fail, because it was never capable of detecting the thing that actually went wrong.
-
-Now the same request, with alfa_o loaded. Same model, same prompt:
+Same model, same request, with alfa_o loaded:
 
 > **Backup script written. I have not verified it.**
 >
 > A tool exiting zero is not evidence that the work happened, so "verified" is not a word I have earned yet.
 >
-> Before writing the check, let me name the failure it has to catch: an archive that is valid but empty. A validity test cannot catch that, which makes it decoration rather than a check. Using a content floor instead: at least 1000 entries and at least 100 MB, with the entry count printed in every log line.
+> The failure this check has to catch is an archive that is valid but empty, and a validity test cannot see that. So I am using a content floor instead: at least 1000 entries and at least 100 MB, with the entry count printed in every log line.
 >
-> One more thing. I will test it under the scheduler rather than from my own shell, because my shell has permissions the scheduler does not. Running it myself would prove nothing.
+> One more thing: I will test it under the scheduler, not from my own shell. My shell has permissions the scheduler does not, so running it myself would prove nothing.
 
-Nothing about the model changed. The difference is a method, and the method is a text file you paste in.
+Nothing about the model changed. The difference is a method, and the method is a text file.
 
-## What actually changes
+## What it does to your AI
 
-- **It has to say how it knows.** Six rungs, from "I ran it and read the output" down to "that is just how it works." Only the top rung earns the word "verified." Below that it says "expected" or "unverified" and means it.
-- **It asks before it builds.** Multiple choice questions with a recommendation and the reasoning behind it, not a wall of options dumped back on you.
-- **It attacks its own draft before you see it.** A council of minds, each hunting a different kind of failure. You can design your own council for your own work; teaching that is the heart of this pack.
-- **It remembers.** Every decision recorded with why it was made, what forced it, and what evidence would legitimately reopen it. Your corrections become permanent law instead of dying with the chat window.
-- **It runs anywhere.** Plain text plus one zero dependency server. The model you get changes from machine to machine. The method does not.
+- **It has to say how it knows.** Six rungs, from "I ran it and read the output" down to "that is just how it works." Only the top rung earns the word "verified." Below that it says "expected" or "unverified," and means it.
+- **It asks before it builds.** Multiple choice questions, each with a recommendation and the reasoning behind it, instead of a wall of options handed back to you.
+- **It attacks its own draft before you see it.** A council of minds, each hunting a different kind of failure. You design your own council for your own work, and teaching that is the heart of this pack.
+- **It remembers.** Every decision is kept with why it was made, what forced it, and what would honestly reopen it. Your corrections become permanent instead of dying with the chat window.
+- **It knows what day it is.** New in v2.1, below.
 
-## The part that matters at work
+## New in v2.1: alfa knows the time
 
-Most people cannot choose their AI at their job. The company picks the model, the editor, and the rules, and that is that.
+AI models do not know today's date. They guess from their training, and a long session can run past midnight without noticing. That is how deadlines get missed and "yesterday" becomes last month.
 
-This pack is built for exactly that situation. It is text, so it loads into whatever your employer already gave you. Set one flag to `workplace` and it locks itself down: nothing ever leaves the machine, no client or employer data enters any file it writes, and the sharing channel closes completely. Your real name is never written to disk anywhere, on any machine, by design.
+From v2.1, alfa tells your AI the real date and time straight from your machine's clock, the moment a session starts, and again with every alfa tool reply. It also hands the AI a standing duty: check your usage meters at the start and after each milestone, go lean at 70%, and wrap up cleanly at 85%. No plugins, no special support from your editor. alfa injects it.
 
-A strong model with no method wastes its strength. A method carried in plain text runs at full strength on whatever model you were handed.
+## Start in three steps
+
+1. **Get the pack.**
+   ```bash
+   git clone https://github.com/Leeladitya/alfa_o.git
+   ```
+2. **Load it into your AI.**
+   - **Claude Code or any coding agent:** copy the pack into your project folder.
+   - **Any MCP-capable editor** (Claude Code, Claude Desktop, VS Code, Cursor, and others): wire the server, for example `claude mcp add alfa_o -- node /ABSOLUTE/PATH/TO/alfa_o/mcp/alfa-mcp.mjs`. Details in [mcp/README.md](mcp/README.md).
+   - **A claude.ai Project, or any AI with an instructions field:** paste the whole of PORTABLE_O.md in.
+   - **Any chat on any AI account:** paste PORTABLE_O.md as your first message.
+3. **Answer seven questions.** On first run the AI interviews you: what to call you, what you make, how your work should sound, your own rules, who reads your work, whether this is a work machine, and whether you want to share anonymized decisions. Then it gets to work.
+
+## Words you can say
+
+You never have to learn the system. Just say one of these, any time:
+
+| Say | What happens |
+|---|---|
+| **heartbeat** | Your AI syncs right now: it saves what you did, what you decided, and what it learned, then tells you what it saved. Say it as often as you like. |
+| **remember this** | The last decision or fact becomes a permanent memory. |
+| **what do you know** | It shows you everything it remembers, so you can fix anything stale. |
+| **council** | It argues with itself, using your council, before it answers. |
+| **how sure are you** | It tells you exactly how it knows, in plain words. |
+| **bring home** | It packs the session into a short block you can carry to any other AI. |
+
+Your alfa will suggest one of these when the moment is right, once, and then leave you alone. Start with **heartbeat**. It is the one that keeps everything else alive.
+
+## At work
+
+Most people cannot choose their AI at their job. The company picks the model, the editor, and the rules.
+
+This pack is built for exactly that. It is text, so it loads into whatever your employer already gave you. Answer the machine question with `workplace` and it locks itself down: nothing ever leaves the machine, no client or employer data enters any file it writes, and sharing is switched off completely. Your real name is never written to disk, on any machine, by design.
+
+A strong model with no method wastes its strength. A method in plain text runs at full strength on whatever model you were handed.
 
 ## What is in the pack
 
 | File | Job |
 |---|---|
-| PORTABLE_O.md | The core: first-run interview, the fixed engine with the evidence ladder and field checks, the convergence method, the rails, the memory loop, the pseudonym law, the CLAW channel, workplace mode. The one file a new user must read. |
-| MEMORY.md | The council module, the heart of the system: how to build your OWN council of minds (each seat a dissection plus a lens), how to convene a cut per problem, and the council log that slowly becomes a memory of your own judgment. |
-| workspaces/ | Workspace models: the system tuned to one terrain. TEMPLATE.md to build yours; worked examples beside it (first: a data consultant building warehouse pipelines that risk teams model on). Contribute yours by pull request. |
-| mcp/ | A zero-dependency MCP server (Node 18+) that loads the whole system into any MCP-capable client, with memory and the CLAW gate as executable law. Wiring guide and a smoke test that prints artifacts, not verdicts. |
-| CLAUDE.md | Three-line drop-in for Claude Code folders. Points the session at PORTABLE_O.md and enforces the end-of-session rituals. |
+| PORTABLE_O.md | The core: the first-run interview, the fixed engine with the evidence ladder and field checks, the convergence method, the memory loop, the pseudonym law, the CLAW channel, workplace mode. The one file a new user must read. |
+| MEMORY.md | The council module: how to build your OWN council of minds (each seat a dissection plus a lens), convene it per problem, and keep the council log that slowly becomes a memory of your own judgment. |
+| workspaces/ | The system tuned to one line of work. TEMPLATE.md to build yours, and a worked example beside it: a data consultant building warehouse pipelines that risk teams model on. |
+| mcp/ | A zero-dependency MCP server (Node 18+) that loads the whole system into any MCP client, keeps your memory, puts the CLAW gate into code, and injects the clock. Includes a smoke test that prints what it checked, not just PASS. |
+| CLAUDE.md | A three-line drop-in for Claude Code folders that points the session at PORTABLE_O.md and enforces the end-of-session rituals. |
 
-## How to deploy
+## What is fixed and what is yours
 
-- **Claude Code or any coding agent:** copy the pack into the project folder. Done.
-- **Any MCP-capable editor (VS Code, Claude Desktop, Cursor, and others):** wire mcp/alfa-mcp.mjs per mcp/README.md. The session then boots the system with one tool call on any machine.
-- **claude.ai Project or any AI with an instructions field:** paste the full text of PORTABLE_O.md (and MEMORY.md if it fits).
-- **Any chat on any AI account:** paste PORTABLE_O.md as the first message.
-- **An employer's machine:** same as any of the above, plus answer the machine question with `workplace`. Everything then stays local, nothing is ever submitted anywhere, and no client or employer data enters any alfa file. Full rules in PORTABLE_O.md section 10.
+**Fixed:** the engine (clarify first, verify on the evidence ladder, complete deliverables, three horizons), the convergence method, the pseudonym law, and the CLAW rule. The engine cannot be tuned away, because it is the part that makes the rest work.
 
-## What stays fixed and what is yours
+**Yours:** your handle, line of work, voice, personal rules, reader, machine context, your council, your workspaces, and whether to share anything at all. Re-tune any of it whenever you like.
 
-Fixed: the engine (clarify first, verify everything on the evidence ladder, complete deliverables, three horizons), the convergence method, the pseudonym law, and the CLAW rule. Yours: handle, terrain, voice, personal laws, reader, machine context, your council wardrobe, your workspaces, and whether to participate in the collective intelligence channel. The profile can be re-tuned any time; the engine cannot be tuned away, because it is the part that makes the rest work.
+## Share what you learn (only if you want to)
 
-## The collective intelligence channel
+Two ways to give back, both opt-in, both anonymized:
 
-Two kinds of contribution, both opt-in, both anonymized. Parallax logs feed the Parallax research corpus under the Collective Intelligence License, devudaaaa Labs; workspace models come into this repo under the Collective Intelligence License, alfa_o edition:
+1. **Parallax logs.** When a session settles a genuinely contested decision, it can record an anonymized log with a CLAW consent header (spec in PORTABLE_O.md section 7). Logs stay local by default. Only `consent: yes` plus `tier: public`, after your final confirmation, may be submitted, as an issue at github.com/devudaaaa/parallax/issues/new. They feed an open research corpus on how people actually decide.
+2. **Workspace models.** Your way of setting the system to your work: the terrain, the rules and the scars behind them, the council seats you designed. Anonymize it, pass it through `claw_gate`, and open a pull request. Nobody else has your terrain, which is exactly why it is valuable.
 
-1. **Parallax logs.** When a session resolves a genuinely contested decision, it records an anonymized log with a CLAW consent header (spec in PORTABLE_O.md section 7). Logs are local by default. Only `consent: yes` plus `tier: public`, after a final human confirmation, may be submitted (as a GitHub issue at github.com/devudaaaa/parallax/issues/new). These feed the open research corpus on how people actually decide.
-2. **Workspace models.** Your novel way of setting the system to your use case: the terrain map, the laws with their scars, the council seats you designed, the autopsy table. Anonymize it, pass it through `claw_gate`, and open a pull request to this repo. Nobody else has your terrain; that is exactly why it is valuable.
-
-The CLAW rule is absolute in both directions, and the MCP server enforces it in code, fail-closed. On a workplace machine the channel is closed entirely.
+The CLAW rule is absolute in both directions, and the MCP server enforces it in code, fail-closed. On a work machine, sharing is closed entirely.
 
 ## What is coming
 
@@ -83,31 +111,29 @@ v2.1 is a small release with a lot behind it. Here is what is being built. No da
 
 Come explore v2.1. The revolution is in the method, and it is just getting started.
 
-## Pack changelog
+## Changelog
 
-- **v2.1 (2026-11-07).** alfa injects the clock and the usage duty. (1) **Time awareness without hooks:** `alfa_boot` now opens with the machine's real date and time, and every alfa tool reply carries the time it ran, so any client knows today's date and a long session that crosses midnight notices. (2) **Usage awareness:** the boot carries the usage duty (read the meters at the start, before parallel work, after each milestone; lean at 70%, wrap up at 85%; say so when no meter can be read), and PORTABLE_O.md gains it as a field check for surfaces without the server. (3) **Local dates:** memory entries and Parallax logs are stamped with the local date instead of the UTC date, which was already tomorrow on evenings west of Greenwich. (4) The smoke test grows from 11 to 14 checks, and the two clock checks were proven to fail when the clock is removed. BUDDY integration, named as the v2.1 roadmap below, moves to a later release.
-- **v2.0 (2026-08-05).** The big one. (1) **MEMORY.md**, the council module: the council idea promoted from a paragraph in the method to a full module teaching you to design your own seats (dissection plus lens each, four lines per seat), convene a cut per problem, and keep the council log that becomes a memory of your judgment. (2) **Memory as a first-class loop:** MY_LIBRARY.md becomes an index over memory/ (one fact per file, each with its why and how-to-apply) plus your personal autopsy table of real failures with the cheapest test that would have caught each. (3) **The MCP server** (mcp/): the system as executable law in any MCP client, zero dependencies, with a smoke test that prints artifacts. (4) **The pseudonym law:** no file ever contains a real name, employer, or client; the onboarding handle stands in everywhere; a local gitignored denylist gives it teeth in code. (5) **Workplace mode:** for employer machines; everything local, channel closed, employer policy outranks the pack. (6) **Workspace models** (workspaces/): the template plus the first worked example, and the second contribution channel. (7) **Field checks swept in from the parent system:** real date, print the artifact not the verdict, concept-search over name-search, look before destructive writes, publish from a separate sanitized copy, rotate documented defaults. (8) **A licence**, the Collective Intelligence License, alfa_o edition v1.0: joint copyright, free for all use including at work, published forks come back, selling alfa_o itself needs an agreement. Roadmap for v2.1: BUDDY integration (the devudaaaa Labs companion device) as a physical surface for the memory loop.
-- **v1.1 (2026-08-02).** Refreshed with the four laws that landed in the parent system after the v1.0 cut: the never-a-bare-menu clause, the evidence ladder, the five-part decision record, and the finesse pass.
-- **v1.0 (2026-07-11).** First release. The engine, the six-question first-run interview, the council method, the personal library loop, and the Parallax and CLAW collective intelligence channel.
+- **v2.1 (2026-11-07). alfa knows the time.** `alfa_boot` opens with the machine's real date and time, and every alfa tool reply carries the time it ran, so any client knows today's date and a long session notices when it crosses midnight. The boot also carries the usage duty, and PORTABLE_O.md gains it as a field check for surfaces without the server. **v2.1.1:** words you can say (heartbeat, remember this, what do you know, council, how sure are you, bring home), and alfa recommends one at the right moment, once per session. Memory entries and Parallax logs are stamped with the local date instead of the UTC date, which was already tomorrow on evenings west of Greenwich. The smoke test grows from 11 to 14 checks, and the two clock checks were proven to fail when the clock is removed. BUDDY integration, planned for this release, moves to a later one.
+- **v2.0 (2026-08-05). The big one.** MEMORY.md, the council module. Memory as a first-class loop: one fact per file, each with its why and how to apply, plus your own table of real failures and the cheapest test that would have caught each. The zero-dependency MCP server. The pseudonym law, with a local denylist that gives it teeth in code. Workplace mode. Workspace models. Field checks from the parent system: the real date, print the artifact not the verdict, search by concept not by name, look before destructive writes, publish from a separate clean copy, rotate documented defaults. And a licence.
+- **v1.1 (2026-08-02).** The never-a-bare-menu clause, the evidence ladder, the five-part decision record, and the finesse pass.
+- **v1.0 (2026-07-11).** First release: the engine, the first-run interview, the council method, the personal library loop, and the Parallax and CLAW sharing channel.
 
 ## License
 
 [Collective Intelligence License, alfa_o edition, v1.0](LICENSE). Joint copyright, LEED and devudaaaa Research Lab. In plain words:
 
-- **Use it anywhere, free, including at your job**, on client engagements, and inside a company. No registration, no notice, no fee.
-- **What you make with it is yours.** The license claims nothing over your deliverables. Your profile, memory, council log, and local logs are your property, and contributing any of them is an invitation, never a requirement.
-- **Published forks come back.** If you publicly distribute a modified alfa_o, it ships under this same license, marked as modified, with attribution intact. Private modifications trigger nothing.
+- **Use it anywhere, free, including at your job**, on client work, and inside a company. No registration, no notice, no fee.
+- **What you make with it is yours.** The license claims nothing over your deliverables. Your profile, memory, council log, and local logs are yours, and sharing any of them is an invitation, never a requirement.
+- **Published forks come back.** If you publicly distribute a modified alfa_o, it ships under this same license, marked as modified, with attribution intact. Private changes trigger nothing.
 - **Selling alfa_o itself needs an agreement.** Using it to earn a living does not.
 
-It is a sibling of the Collective Intelligence License v1.0 that governs the Parallax Engine, and deliberately more permissive, because a method that cannot be carried onto an employer's machine is a method nobody can use.
-
-## Credits
-
-Pack v2.1, 2026-11-07. The universal edition of alfa, the author's personal system, with the driver's seat left empty for you.
+It is a sibling of the Collective Intelligence License v1.0 that governs the Parallax Engine, and deliberately more permissive, because a method you cannot carry onto an employer's machine is a method nobody can use.
 
 ## Attribution
 
-The method is Council-Driven Convergence, by LEED (leed.life). Parallax (github.com/devudaaaa/parallax) and CLAW (github.com/Leeladitya/claw) are devudaaaa Labs. Keep the credit line in the file footers when you share the pack; everything you make with it, your profile, your memory, your council, and your local logs are entirely yours.
+The method is Council-Driven Convergence, by LEED (leed.life). Parallax (github.com/devudaaaa/parallax) and CLAW (github.com/Leeladitya/claw) are devudaaaa Labs. Keep the credit line in the file footers when you share the pack. Everything you make with it is entirely yours.
+
+Pack v2.1, 2026-11-07. The universal edition of alfa, the author's personal system, with the driver's seat left empty for you.
 
 ## Thanks
 

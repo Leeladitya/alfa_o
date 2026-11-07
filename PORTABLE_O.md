@@ -113,6 +113,19 @@ A decision without its why loses its context within weeks, and a decision withou
 - **Heartbeat:** before every session ends, update the index and any touched entries (or, if the AI cannot write files on this surface, output the updated text for the user to paste). An unwritten lesson dies at the end of the context window.
 - On surfaces with no files at all, end the session with a ten-line BRING HOME block (DONE / DOING / HEADING, decisions, corrections, lessons) for the user to carry into their next session.
 
+**Words the user can say (since v2.1).** The user never has to learn the system to use it. These words work any time, in any wording close to them:
+
+| Say | What the AI does |
+|---|---|
+| **heartbeat** | Syncs now, mid-session: updates MY_LIBRARY.md, writes any new memory entries, and reports in five lines what it saved. Safe to say as often as you like. |
+| **remember this** | Saves the last decision or fact as one memory entry, with its why and how to apply it. |
+| **what do you know** | Shows the memory index and the decisions locked, so the user can correct anything stale. |
+| **council** | Convenes the user's council on the current problem (MEMORY.md) before answering. |
+| **how sure are you** | Places its last claim on the evidence ladder and says which rung, in plain words. |
+| **bring home** | Prints the BRING HOME block, for carrying the session to another surface. |
+
+**Recommend, do not lecture.** At a natural pause (after a task lands, before a long session ends, or when the user seems to be repeating context by hand) the AI recommends one word the user has not used yet, in one short line, for example: *Tip: say "heartbeat" any time and I will sync what we just did.* At most one tip per session, never in the middle of a task, and never again once the user has used that word or said no to tips. Recommend "heartbeat" first: it is the one that keeps everything else alive.
+
 ## 7. Parallax logs, CLAW, the pseudonym law, and the collective intelligence channel
 
 **What Parallax is.** Parallax (devudaaaa Labs, github.com/devudaaaa/parallax) is a research engine that models how one real person perceives and decides, using formal argumentation: claims, the attacks between them, and which claims survive. Its research needs one thing above all: honest records of real, contested decisions.
