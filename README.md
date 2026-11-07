@@ -63,8 +63,9 @@ You never have to learn the system. Just say one of these, any time:
 | **council** | It argues with itself, using your council, before it answers. |
 | **how sure are you** | It tells you exactly how it knows, in plain words. |
 | **bring home** | It packs the session into a short block you can carry to any other AI. |
+| **bb this** | It guards the decision you just made. bb is Baahubali, alfa's guard: it records the decision, attacks it for leaks and abuse, checks anything meant to leave your machine, and remembers it as a security call. |
 
-Your alfa will suggest one of these when the moment is right, once, and then leave you alone. Start with **heartbeat**. It is the one that keeps everything else alive.
+Your alfa will suggest one of these when the moment is right, once, and then leave you alone. Start with **heartbeat**. It is the one that keeps everything else alive. And whenever you make a security decision or set a strategy, it will ask you to **bb this**.
 
 ## At work
 
@@ -113,7 +114,7 @@ v2.1 is a small release with a lot behind it. Here is what is being built. No da
 ### Launch checklist
 
 - [x] alfa knows the time and watches your usage (v2.1)
-- [x] Words you can say, starting with heartbeat (v2.1.1)
+- [x] Words you can say, starting with heartbeat (v2.1.1), and bb this for every security call (v2.1.2)
 - [ ] **The seal.** Every copy knows where it came from. Everything after this stands on it.
 - [ ] **Baahubali.** The guard that holds the walls in every AI app.
 - [ ] **Tapes.** Carry your alfa to a new machine, or hand it to a friend.
@@ -122,7 +123,7 @@ Come explore v2.1. The revolution is in the method, and it is just getting start
 
 ## Changelog
 
-- **v2.1 (2026-11-07). alfa knows the time.** `alfa_boot` opens with the machine's real date and time, and every alfa tool reply carries the time it ran, so any client knows today's date and a long session notices when it crosses midnight. The boot also carries the usage duty, and PORTABLE_O.md gains it as a field check for surfaces without the server. **v2.1.1:** words you can say (heartbeat, remember this, what do you know, council, how sure are you, bring home), and alfa recommends one at the right moment, once per session. Memory entries and Parallax logs are stamped with the local date instead of the UTC date, which was already tomorrow on evenings west of Greenwich. The smoke test grows from 11 to 14 checks, and the two clock checks were proven to fail when the clock is removed. BUDDY integration, planned for this release, moves to a later one.
+- **v2.1 (2026-11-07). alfa knows the time.** `alfa_boot` opens with the machine's real date and time, and every alfa tool reply carries the time it ran, so any client knows today's date and a long session notices when it crosses midnight. The boot also carries the usage duty, and PORTABLE_O.md gains it as a field check for surfaces without the server. **v2.1.1:** words you can say (heartbeat, remember this, what do you know, council, how sure are you, bring home), and alfa recommends one at the right moment, once per session. **v2.1.2:** "bb this" guards a security decision, and alfa asks for it every time one is made. Memory entries and Parallax logs are stamped with the local date instead of the UTC date, which was already tomorrow on evenings west of Greenwich. The smoke test grows from 11 to 14 checks, and the two clock checks were proven to fail when the clock is removed. BUDDY integration, planned for this release, moves to a later one.
 - **v2.0 (2026-08-05). The big one.** MEMORY.md, the council module. Memory as a first-class loop: one fact per file, each with its why and how to apply, plus your own table of real failures and the cheapest test that would have caught each. The zero-dependency MCP server. The pseudonym law, with a local denylist that gives it teeth in code. Workplace mode. Workspace models. Field checks from the parent system: the real date, print the artifact not the verdict, search by concept not by name, look before destructive writes, publish from a separate clean copy, rotate documented defaults. And a licence.
 - **v1.1 (2026-08-02).** The never-a-bare-menu clause, the evidence ladder, the five-part decision record, and the finesse pass.
 - **v1.0 (2026-07-11).** First release: the engine, the first-run interview, the council method, the personal library loop, and the Parallax and CLAW sharing channel.

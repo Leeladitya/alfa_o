@@ -24,7 +24,7 @@ const PACK_ROOT = process.env.ALFA_HOME
   ? resolve(process.env.ALFA_HOME)
   : resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const SERVER_INFO = { name: "alfa_o", version: "2.1.1" };
+const SERVER_INFO = { name: "alfa_o", version: "2.1.2" };
 
 // ---------- the clock and the usage duty (injected, no hooks needed) ----------
 
@@ -47,7 +47,8 @@ const USAGE_DUTY =
   "If this client exposes no meter, ask the user once and say plainly that the meters could not be read.";
 
 const WORDS_TIP =
-  'WORDS THE USER CAN SAY: "heartbeat" (sync now: update MY_LIBRARY.md and memory, report what was saved), "remember this", "what do you know", "council", "how sure are you", "bring home". ' +
+  'WORDS THE USER CAN SAY: "heartbeat" (sync now: update MY_LIBRARY.md and memory, report what was saved), "remember this", "what do you know", "council", "how sure are you", "bring home", "bb this" (guard a security decision: five-part record, warden attack, CLAW gate for anything outbound, saved to memory tagged security). ' +
+  'Whenever a security decision or strategy is taken, ask the user once for that decision: "That was a security call. Say \'bb this\' and I will guard it." ' +
   "At a natural pause, recommend ONE word the user has not used yet, in one short line, at most once per session; start with heartbeat. Never mid-task, never after the user declines tips.";
 
 // ---------- pack access ----------

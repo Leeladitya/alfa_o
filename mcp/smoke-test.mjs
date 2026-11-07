@@ -115,7 +115,7 @@ try {
   const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   check("alfa_boot OPENS with this machine's real local date and the usage duty", "a session reasoning from a remembered date, or a UTC date that is already tomorrow in the evening", bootText.startsWith("CLOCK: ") && bootText.split("\n")[0].includes(today) && bootText.includes("USAGE DUTY"), bootText.split("\n").slice(0, 2).join("\n"));
 
-  check("alfa_boot teaches the words the user can say, heartbeat first", "users never discovering heartbeat because nothing ever tells them it exists", bootText.includes("WORDS THE USER CAN SAY") && bootText.indexOf('"heartbeat"') < bootText.indexOf('"remember this"'), bootText.split("\n").filter((l) => l.startsWith("WORDS")).join("\n"));
+  check("alfa_boot teaches the words the user can say, heartbeat first, and asks for bb this on security calls", "users never discovering heartbeat or bb this because nothing ever tells them they exist", bootText.includes("WORDS THE USER CAN SAY") && bootText.indexOf('"heartbeat"') < bootText.indexOf('"remember this"') && bootText.includes('"bb this"') && bootText.includes("security decision"), bootText.split("\n").filter((l) => l.startsWith("WORDS")).join("\n"));
 
   const savePII = await rpc("tools/call", { name: "memory_save", arguments: { name: "bad-entry", fact: "Met Jane Realname about the cluster", why: "x", apply: "x" } });
   check("memory_save DENIES a denylist hit and writes nothing", "the pseudonym law failing silently, PII landing on disk", toolText(savePII).startsWith("DENY") && !existsSync(join(FIXTURE, "memory", "bad-entry.md")), toolText(savePII));

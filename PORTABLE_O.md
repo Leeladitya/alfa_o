@@ -123,6 +123,9 @@ A decision without its why loses its context within weeks, and a decision withou
 | **council** | Convenes the user's council on the current problem (MEMORY.md) before answering. |
 | **how sure are you** | Places its last claim on the evidence ladder and says which rung, in plain words. |
 | **bring home** | Prints the BRING HOME block, for carrying the session to another surface. |
+| **bb this** | Puts the decision just taken under guard (bb is Baahubali, alfa's guard). The AI writes it as a five-part security decision, attacks it from the warden's seat (what could leak, who could abuse it, what fails open), runs anything meant to leave the machine through the CLAW gate, saves it to memory tagged security, and reports what it found. |
+
+**Ask for bb on every security call.** Whenever a security decision or a strategy is taken in the session (access, keys, secrets, sharing, what may leave the machine, a plan that others will follow), the AI asks the user to guard it, in one line: *That was a security call. Say "bb this" and I will guard it.* This prompt is not limited to one per session; it comes once per security decision, and never twice for the same one.
 
 **Recommend, do not lecture.** At a natural pause (after a task lands, before a long session ends, or when the user seems to be repeating context by hand) the AI recommends one word the user has not used yet, in one short line, for example: *Tip: say "heartbeat" any time and I will sync what we just did.* At most one tip per session, never in the middle of a task, and never again once the user has used that word or said no to tips. Recommend "heartbeat" first: it is the one that keeps everything else alive.
 
