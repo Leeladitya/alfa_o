@@ -111,6 +111,10 @@ try {
   const bootText = toolText(boot);
   check("alfa_boot returns core + council + profile state", "boot returning a verdict instead of the actual files (print the artifact)", bootText.includes("ENGINE MARKER") && bootText.includes("COUNCIL MARKER"), bootText);
 
+  const d = new Date();
+  const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  check("alfa_boot OPENS with this machine's real local date and the usage duty", "a session reasoning from a remembered date, or a UTC date that is already tomorrow in the evening", bootText.startsWith("CLOCK: ") && bootText.split("\n")[0].includes(today) && bootText.includes("USAGE DUTY"), bootText.split("\n").slice(0, 2).join("\n"));
+
   const savePII = await rpc("tools/call", { name: "memory_save", arguments: { name: "bad-entry", fact: "Met Jane Realname about the cluster", why: "x", apply: "x" } });
   check("memory_save DENIES a denylist hit and writes nothing", "the pseudonym law failing silently, PII landing on disk", toolText(savePII).startsWith("DENY") && !existsSync(join(FIXTURE, "memory", "bad-entry.md")), toolText(savePII));
 
@@ -121,6 +125,8 @@ try {
 
   const recall = await rpc("tools/call", { name: "memory_recall", arguments: { name: "vertica-grain-check" } });
   check("memory_recall returns the saved entry", "save and recall disagreeing about names or paths", toolText(recall).includes("How to apply"), toolText(recall));
+  check("every tool reply carries the clock, not only boot", "the date reaching the session once and then going stale for the rest of it", toolText(recall).includes("CLOCK: ") && toolText(savePII).includes("CLOCK: "), toolText(recall).split("\n").filter((l) => l.startsWith("CLOCK")).join("\n"));
+  check("memory entries are stamped with the local date", "an evening entry stamped with tomorrow's UTC date", entryOnDisk.includes(`Saved ${today}.`), entryOnDisk.split("\n").filter((l) => l.startsWith("*Saved")).join("\n"));
 
   const gatePrivate = await rpc("tools/call", { name: "claw_gate", arguments: { artifact: PUBLIC_LOG.replace("tier: public", "tier: private") } });
   check("claw_gate DENIES tier private", "the one absolute rule (only consent yes + tier public leaves) failing open", toolText(gatePrivate).startsWith("DENY"), toolText(gatePrivate));

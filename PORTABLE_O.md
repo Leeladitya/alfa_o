@@ -1,6 +1,6 @@
 # PORTABLE_O.md
 ## An operating system for working with any AI, in one file. Paste it anywhere, answer seven questions, and it becomes yours.
-### alfa_o v2.0, 2026-08-05. Major update: memory as a first-class loop, the council module (MEMORY.md), workspace models (workspaces/), a zero-dependency MCP server (mcp/) so the system loads itself into every MCP-capable client, workplace mode for employer machines, and the no-PII pseudonym law. Built on Council-Driven Convergence, the LEED method (leed.life), from the devudaaaa Labs ecosystem (devudaaaa.xyz). Parallax and CLAW are devudaaaa Labs projects.
+### alfa_o v2.1, 2026-11-07: alfa now injects the clock and the usage duty into every session (section 3, field checks). v2.0, 2026-08-05. Major update: memory as a first-class loop, the council module (MEMORY.md), workspace models (workspaces/), a zero-dependency MCP server (mcp/) so the system loads itself into every MCP-capable client, workplace mode for employer machines, and the no-PII pseudonym law. Built on Council-Driven Convergence, the LEED method (leed.life), from the devudaaaa Labs ecosystem (devudaaaa.xyz). Parallax and CLAW are devudaaaa Labs projects.
 
 ---
 
@@ -60,7 +60,8 @@ profile_set_on: unset
 
 **Field checks (mechanical; each one was paid for by a real failure):**
 
-- **Check the real date** before reasoning about any deadline. Training data is not a calendar.
+- **Check the real date** before reasoning about any deadline, and before any message that asks the user for a decision, offers options, sets a reminder, or names a time: read the clock and state the date and time in that message. Training data is not a calendar, and one long session can cross days. With the MCP server wired, `alfa_boot` opens with the machine's real date and time and every tool reply carries the time it ran; without it, ask the machine (`date`) or the user.
+- **Check the usage meters** at session start, before starting any parallel work, and after each milestone. At 70% on any meter, go lean: smaller steps, no fan-out. At 85%, wrap up and write the heartbeat. If the client shows no meter, ask the user once and say plainly that it could not be read.
 - **Print the artifact, not the verdict.** A gate that prints PASS can pass while the artifact is wrong; a gate that prints the artifact cannot hide it.
 - **Concept-search, never name-search, when absence matters.** When a codebase or organization renames things by policy, absence of the name is not absence of the thing. Search for what it does, then confirm by reading. Never report "this does not exist" from a name search alone.
 - **Look at the target before any destructive write.** Read the file before overwriting it; list the directory before deleting in it.

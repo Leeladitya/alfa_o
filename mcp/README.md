@@ -5,7 +5,7 @@
 
 | Tool | Job |
 |---|---|
-| `alfa_boot` | The whole OS in one call: PORTABLE_O.md, MEMORY.md, the active workspace, the profile, the memory index. Call it first, every session. |
+| `alfa_boot` | The whole OS in one call: the machine's real date and time, the usage duty, PORTABLE_O.md, MEMORY.md, the active workspace, the profile, the memory index. Call it first, every session. Since v2.1 every tool reply also carries the time it ran. |
 | `memory_save` | One fact per file into memory/, index line updated. Refuses denylist hits (the pseudonym law). |
 | `memory_recall` | The index, or one entry in full. |
 | `claw_gate` | The CLAW consent gate as code, fail-closed. DENY unless consent yes, tier public, anonymized yes, denylist clean, and workplace mode off. |

@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 /**
  * alfa-mcp.mjs: the alfa_o operating system as an MCP server.
- * alfa_o v2.0, 2026-08-05. Zero dependencies, Node 18+, stdio transport
+ * alfa_o v2.1, 2026-11-07. Zero dependencies, Node 18+, stdio transport
  * (newline-delimited JSON-RPC 2.0, per the MCP stdio spec).
  *
  * Tools: alfa_boot, memory_save, memory_recall, claw_gate, parallax_log.
  * Law in code: the pseudonym law (denylist), the CLAW gate (fail-closed),
  * and workplace mode (nothing leaves the machine, ever).
+ * Since v2.1, alfa injects the clock: alfa_boot opens with the machine's real
+ * date and time plus the usage duty, and every tool reply carries the time it
+ * ran, so any client knows the date without hooks.
  *
  * Method: Council-Driven Convergence by LEED (leed.life).
  * Parallax and CLAW: devudaaaa Labs (devudaaaa.xyz). CLAW's policy model is
@@ -21,7 +24,27 @@ const PACK_ROOT = process.env.ALFA_HOME
   ? resolve(process.env.ALFA_HOME)
   : resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const SERVER_INFO = { name: "alfa_o", version: "2.0.0" };
+const SERVER_INFO = { name: "alfa_o", version: "2.1.0" };
+
+// ---------- the clock and the usage duty (injected, no hooks needed) ----------
+
+function localDate(d = new Date()) {
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function nowLine() {
+  const d = new Date();
+  const day = d.toLocaleDateString("en-US", { weekday: "short" });
+  const time = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  const zone = Intl.DateTimeFormat().resolvedOptions().timeZone ?? "local time";
+  return `CLOCK: ${day} ${localDate(d)} ${time} (${zone}), read from this machine when this tool ran. Use this date; never reason from a remembered one.`;
+}
+
+const USAGE_DUTY =
+  "USAGE DUTY: read the plan or usage meters at session start, before starting any parallel work, and after each milestone. " +
+  "At 70% on any meter, go lean (smaller steps, no fan-out); at 85%, wrap up and write the heartbeat. " +
+  "If this client exposes no meter, ask the user once and say plainly that the meters could not be read.";
 
 // ---------- pack access ----------
 
@@ -67,7 +90,7 @@ const TOOLS = [
   {
     name: "alfa_boot",
     description:
-      "Load the alfa_o operating system: PORTABLE_O.md, MEMORY.md, the active workspace, the profile, and the memory index. Call this first in every session.",
+      "Load the alfa_o operating system: the machine's real date and time, the usage duty, PORTABLE_O.md, MEMORY.md, the active workspace, the profile, and the memory index. Call this first in every session.",
     inputSchema: { type: "object", properties: {}, additionalProperties: false },
   },
   {
@@ -121,10 +144,10 @@ const TOOLS = [
 ];
 
 function text(s) {
-  return { content: [{ type: "text", text: s }] };
+  return { content: [{ type: "text", text: s + "\n\n" + nowLine() }] };
 }
 function errText(s) {
-  return { content: [{ type: "text", text: s }], isError: true };
+  return { content: [{ type: "text", text: s + "\n\n" + nowLine() }], isError: true };
 }
 
 function parseClawHeader(artifact) {
@@ -140,7 +163,7 @@ function parseClawHeader(artifact) {
 
 function toolAlfaBoot() {
   const profile = parseProfile();
-  const parts = [];
+  const parts = [nowLine() + "\n" + USAGE_DUTY];
   const core = readPackFile("PORTABLE_O.md");
   const council = readPackFile("MEMORY.md");
   const index = readPackFile("MY_LIBRARY.md");
@@ -178,7 +201,7 @@ function toolMemorySave({ name, fact, why, apply }) {
   const dir = join(PACK_ROOT, "memory");
   mkdirSync(dir, { recursive: true });
   const file = join(dir, safeName + ".md");
-  const stamp = new Date().toISOString().slice(0, 10);
+  const stamp = localDate();
   const entry = `# ${safeName}\n\n${fact}\n\n**Why:** ${why}\n\n**How to apply:** ${apply}\n\n*Saved ${stamp}.*\n`;
   writeFileSync(file, entry, "utf8");
   const indexPath = join(PACK_ROOT, "MY_LIBRARY.md");
@@ -245,7 +268,7 @@ function toolParallaxLog({ log }) {
   if (hits.length > 0) return errText("DENY (pseudonym law): log contains denylist terms and was NOT saved: " + hits.join(", "));
   const dir = join(PACK_ROOT, "parallax_logs");
   mkdirSync(dir, { recursive: true });
-  const stamp = new Date().toISOString().slice(0, 10);
+  const stamp = localDate();
   const n = readdirSync(dir).filter((f) => f.startsWith(stamp)).length + 1;
   const file = join(dir, `${stamp}-${String(n).padStart(2, "0")}.md`);
   writeFileSync(file, log, "utf8");
@@ -281,7 +304,7 @@ function handle(msg) {
           capabilities: { tools: {} },
           serverInfo: SERVER_INFO,
           instructions:
-            "alfa_o: call alfa_boot first in every session; it loads the operating system, profile, workspace, and memory index. Save durable facts with memory_save; pass every outbound artifact through claw_gate.",
+            "alfa_o: call alfa_boot first in every session; it loads the operating system, profile, workspace, and memory index, and opens with the machine's real date and time plus the usage duty. Every tool reply carries the time it ran. Save durable facts with memory_save; pass every outbound artifact through claw_gate.",
         },
       });
     } else if (method === "notifications/initialized" || method === "notifications/cancelled") {

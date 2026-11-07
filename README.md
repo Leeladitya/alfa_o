@@ -71,8 +71,21 @@ Two kinds of contribution, both opt-in, both anonymized. Parallax logs feed the 
 
 The CLAW rule is absolute in both directions, and the MCP server enforces it in code, fail-closed. On a workplace machine the channel is closed entirely.
 
+## What is coming
+
+v2.1 is a small release with a lot behind it. Here is what is being built. No dates are promised; each piece ships when it is proven.
+
+- **Baahubali, a guard for every AI app.** He holds the walls whatever app you run, with no special support needed. One thing he cannot do yet is stop a single stray command in the moment it runs. That job belongs to his successor, coming in a future update for every app that supports it.
+- **A seal on every copy.** Your alfa will tell you whether it is official, modified, or of unknown origin, and keep working either way.
+- **alfas that talk to each other**, safely: every message checked on arrival, and nothing another alfa says is ever taken as an order.
+- **Growing up on evidence.** Your alfa will measure its own maturity from what it has actually done, not from what it claims, and tell you when it is ready for more.
+- **Tapes.** Record your alfa and play it on a new machine, or hand it to a friend.
+
+Come explore v2.1. The revolution is in the method, and it is just getting started.
+
 ## Pack changelog
 
+- **v2.1 (2026-11-07).** alfa injects the clock and the usage duty. (1) **Time awareness without hooks:** `alfa_boot` now opens with the machine's real date and time, and every alfa tool reply carries the time it ran, so any client knows today's date and a long session that crosses midnight notices. (2) **Usage awareness:** the boot carries the usage duty (read the meters at the start, before parallel work, after each milestone; lean at 70%, wrap up at 85%; say so when no meter can be read), and PORTABLE_O.md gains it as a field check for surfaces without the server. (3) **Local dates:** memory entries and Parallax logs are stamped with the local date instead of the UTC date, which was already tomorrow on evenings west of Greenwich. (4) The smoke test grows from 11 to 14 checks, and the two clock checks were proven to fail when the clock is removed. BUDDY integration, named as the v2.1 roadmap below, moves to a later release.
 - **v2.0 (2026-08-05).** The big one. (1) **MEMORY.md**, the council module: the council idea promoted from a paragraph in the method to a full module teaching you to design your own seats (dissection plus lens each, four lines per seat), convene a cut per problem, and keep the council log that becomes a memory of your judgment. (2) **Memory as a first-class loop:** MY_LIBRARY.md becomes an index over memory/ (one fact per file, each with its why and how-to-apply) plus your personal autopsy table of real failures with the cheapest test that would have caught each. (3) **The MCP server** (mcp/): the system as executable law in any MCP client, zero dependencies, with a smoke test that prints artifacts. (4) **The pseudonym law:** no file ever contains a real name, employer, or client; the onboarding handle stands in everywhere; a local gitignored denylist gives it teeth in code. (5) **Workplace mode:** for employer machines; everything local, channel closed, employer policy outranks the pack. (6) **Workspace models** (workspaces/): the template plus the first worked example, and the second contribution channel. (7) **Field checks swept in from the parent system:** real date, print the artifact not the verdict, concept-search over name-search, look before destructive writes, publish from a separate sanitized copy, rotate documented defaults. (8) **A licence**, the Collective Intelligence License, alfa_o edition v1.0: joint copyright, free for all use including at work, published forks come back, selling alfa_o itself needs an agreement. Roadmap for v2.1: BUDDY integration (the devudaaaa Labs companion device) as a physical surface for the memory loop.
 - **v1.1 (2026-08-02).** Refreshed with the four laws that landed in the parent system after the v1.0 cut: the never-a-bare-menu clause, the evidence ladder, the five-part decision record, and the finesse pass.
 - **v1.0 (2026-07-11).** First release. The engine, the six-question first-run interview, the council method, the personal library loop, and the Parallax and CLAW collective intelligence channel.
@@ -90,7 +103,7 @@ It is a sibling of the Collective Intelligence License v1.0 that governs the Par
 
 ## Credits
 
-Pack v2.0, 2026-08-05. The universal edition of alfa, the author's personal system, with the driver's seat left empty for you.
+Pack v2.1, 2026-11-07. The universal edition of alfa, the author's personal system, with the driver's seat left empty for you.
 
 ## Attribution
 
