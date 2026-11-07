@@ -108,6 +108,15 @@ v2.1 is a small release with a lot behind it. Here is what is being built. No da
 - **alfas that talk to each other**, safely: every message checked on arrival, and nothing another alfa says is ever taken as an order.
 - **Growing up on evidence.** Your alfa will measure its own maturity from what it has actually done, not from what it claims, and tell you when it is ready for more.
 - **Tapes.** Record your alfa and play it on a new machine, or hand it to a friend.
+- **alfa meets your apps.** Your alfa will plug into the tools you already use and carry its method in with it. The first one is LEAP.
+
+### Launch checklist
+
+- [x] alfa knows the time and watches your usage (v2.1)
+- [x] Words you can say, starting with heartbeat (v2.1.1)
+- [ ] **The seal.** Every copy knows where it came from. Everything after this stands on it.
+- [ ] **Baahubali.** The guard that holds the walls in every AI app.
+- [ ] **Tapes.** Carry your alfa to a new machine, or hand it to a friend.
 
 Come explore v2.1. The revolution is in the method, and it is just getting started.
 
