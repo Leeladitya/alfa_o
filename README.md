@@ -98,7 +98,15 @@ Two ways to give back, both opt-in, both anonymized:
 1. **Parallax logs.** When a session settles a genuinely contested decision, it can record an anonymized log with a CLAW consent header (spec in PORTABLE_O.md section 7). Logs stay local by default. Only `consent: yes` plus `tier: public`, after your final confirmation, may be submitted, as an issue at github.com/devudaaaa/parallax/issues/new. They feed an open research corpus on how people actually decide.
 2. **Workspace models.** Your way of setting the system to your work: the terrain, the rules and the scars behind them, the council seats you designed. Anonymize it, pass it through `claw_gate`, and open a pull request. Nobody else has your terrain, which is exactly why it is valuable.
 
-The CLAW rule is absolute in both directions, and the MCP server enforces it in code, fail-closed. On a work machine, sharing is closed entirely.
+Who shares what depends on your edition:
+
+| Edition | Sharing |
+|---|---|
+| **Public** (every copy starts here) | Optional. Nothing leaves without your yes. |
+| **Circle** (coming) | Giving anonymized logs back is the price of membership. You can leave any time. |
+| **Work** | Nothing ever leaves. Never in the Circle. Always free for you. |
+
+The CLAW rule is absolute in every edition, and the MCP server enforces it in code, fail-closed. Nothing identifying ever leaves, every contribution needs your final yes, and anything you guarded with "bb this" never leaves your machine at all. These are terms of the method; the licence stays v1.0.
 
 ## What is coming
 
@@ -124,7 +132,7 @@ Come explore v2.1. The revolution is in the method, and it is just getting start
 
 ## Changelog
 
-- **v2.2 (2026-11-07). bb this is CLAW.** A new tool, `bb_this`, turns a security decision into a local CLAW rule: the decision is saved to memory tagged security, its block terms go into `claw_rules.local.json` (which never leaves the machine), and `claw_gate` denies any outbound artifact that breaks a rule, naming the rule without repeating the secret. An unreadable rules file makes the gate deny everything until it is fixed. The smoke test grows to 19 checks, and the two enforcement checks were proven to fail when enforcement is removed.
+- **v2.2 (2026-11-07). bb this is CLAW, and the sharing terms by edition.** Public shares only on the user's yes; the coming Circle gives anonymized logs back as the price of membership; Work never shares and is always free. The licence stays v1.0. A new tool, `bb_this`, turns a security decision into a local CLAW rule: the decision is saved to memory tagged security, its block terms go into `claw_rules.local.json` (which never leaves the machine), and `claw_gate` denies any outbound artifact that breaks a rule, naming the rule without repeating the secret. An unreadable rules file makes the gate deny everything until it is fixed. The smoke test grows to 19 checks, and the two enforcement checks were proven to fail when enforcement is removed.
 - **v2.1 (2026-11-07). alfa knows the time.** `alfa_boot` opens with the machine's real date and time, and every alfa tool reply carries the time it ran, so any client knows today's date and a long session notices when it crosses midnight. The boot also carries the usage duty, and PORTABLE_O.md gains it as a field check for surfaces without the server. **v2.1.1:** words you can say (heartbeat, remember this, what do you know, council, how sure are you, bring home), and alfa recommends one at the right moment, once per session. **v2.1.2:** "bb this" guards a security decision, and alfa asks for it every time one is made. Memory entries and Parallax logs are stamped with the local date instead of the UTC date, which was already tomorrow on evenings west of Greenwich. The smoke test grows from 11 to 14 checks, and the two clock checks were proven to fail when the clock is removed. BUDDY integration, planned for this release, moves to a later one.
 - **v2.0 (2026-08-05). The big one.** MEMORY.md, the council module. Memory as a first-class loop: one fact per file, each with its why and how to apply, plus your own table of real failures and the cheapest test that would have caught each. The zero-dependency MCP server. The pseudonym law, with a local denylist that gives it teeth in code. Workplace mode. Workspace models. Field checks from the parent system: the real date, print the artifact not the verdict, search by concept not by name, look before destructive writes, publish from a separate clean copy, rotate documented defaults. And a licence.
 - **v1.1 (2026-08-02).** The never-a-bare-menu clause, the evidence ladder, the five-part decision record, and the finesse pass.

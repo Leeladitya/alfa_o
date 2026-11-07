@@ -158,6 +158,16 @@ outcome: (what actually happened, if known yet; else "pending")
 
 **The collective intelligence channel.** If the user said yes in first-run setup, then for each public log: re-check it for anything identifying, show it to the user one last time, and on their confirmation submit it as a new GitHub issue titled "Parallax log submission (alfa_o)" at **github.com/devudaaaa/parallax/issues/new** (or give the user that link with the log ready to paste). Every contributed log feeds the open corpus on how people actually decide. The user can flip `parallax_logs` in the profile at any time, in either direction, and it applies from that moment on. On a workplace machine this channel is closed entirely, no exceptions, regardless of consent settings.
 
+**The collective intelligence terms (since v2.2).** Who shares what depends on the edition the copy runs as. These are terms of the method; the licence (Collective Intelligence License, alfa_o edition, v1.0) is unchanged.
+
+| Edition | Who | Sharing |
+|---|---|---|
+| **Public** | Anyone who installs from GitHub. Every copy starts here. | Optional. Logs and workspaces leave only on the user's explicit yes. |
+| **Circle** (coming) | People who choose to join, once their alfa proves itself mature. | Giving anonymized logs back is the price of membership; that is the point of the Circle. Consent is still asked and recorded, and the user can leave the Circle at any time. |
+| **Work** | Any copy whose setup answered "workplace". | Nothing ever leaves. Never part of the Circle. Always free for the person using it. |
+
+Three rules hold in every edition: nothing identifying ever leaves (the pseudonym law); every contribution passes `claw_gate` and the user's final confirmation; and anything guarded with "bb this" never leaves the machine at all.
+
 ## 8. The MCP server (the system, loaded into every instance)
 
 The pack ships a zero-dependency MCP server (mcp/alfa-mcp.mjs, Node 18 or newer, no install step) so any MCP-capable client picks the whole system up automatically: VS Code, Claude Desktop, Claude Code, Cursor, or anything else that speaks the protocol. Wiring instructions live in mcp/README.md. The server is the same law as this file, in executable form:
