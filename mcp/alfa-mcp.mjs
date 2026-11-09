@@ -18,6 +18,10 @@
  * edition; Baahubali's walls (walls.mjs, baahubali.mjs) back alfa_exec, which
  * runs a shell command only after CLAW judges it; alfa_maturity measures this
  * alfa's maturity from evidence that must resolve, never from claims.
+ * Since v2.4, work mode cannot be faked away: local signs of an employer-managed
+ * machine hold a "personal" answer as Work until the user confirms it in their
+ * own words, and every memory entry, log and workspace is stamped with the mode
+ * it was born in, so work data can never leave, whatever the machine says later.
  *
  * Method: Council-Driven Convergence by LEED (leed.life).
  * Parallax and CLAW: devudaaaa Labs (devudaaaa.xyz). CLAW's policy model is
@@ -29,13 +33,13 @@ import { join, dirname, resolve, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { checkSeal, sealLine } from "./seal.mjs";
-import { wallHits, evaluateCommand, audit } from "./walls.mjs";
+import { wallHits, evaluateCommand, audit, effectiveMode, bornStamp, stampLegacy, workBornFiles, confirmPersonal, managedSignals } from "./walls.mjs";
 
 const PACK_ROOT = process.env.ALFA_HOME
   ? resolve(process.env.ALFA_HOME)
   : resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-const SERVER_INFO = { name: "alfa_o", version: "2.3.0" };
+const SERVER_INFO = { name: "alfa_o", version: "2.4.0" };
 
 // ---------- the clock and the usage duty (injected, no hooks needed) ----------
 
@@ -98,12 +102,39 @@ function denylistHits(text) {
 }
 
 function isWorkplace() {
-  return (parseProfile().machine ?? "").startsWith("workplace");
+  return effectiveMode(PACK_ROOT).mode !== "personal";
+}
+
+const stampLine = () => `\n<!-- ${bornStamp(PACK_ROOT)} -->\n`;
+
+/** Mode changes are visible: compare with the last mode seen, log the change, list what stays locked. */
+function modeReport() {
+  const now = effectiveMode(PACK_ROOT);
+  const statePath = join(PACK_ROOT, "mode_state.local.json");
+  let last = null;
+  try {
+    last = existsSync(statePath) ? JSON.parse(readFileSync(statePath, "utf8")).mode : null;
+  } catch {}
+  const lines = [];
+  const stamped = stampLegacy(PACK_ROOT);
+  if (stamped.length > 0) {
+    lines.push(`UPGRADE: ${stamped.length} older home file(s) had no birth stamp and were stamped as ${now.mode === "personal" ? "personal" : "work"}, the mode this machine runs in now.`);
+    audit(PACK_ROOT, { layer: "stamp", verdict: "stamped", count: stamped.length, mode: now.mode });
+  }
+  if (last && last !== now.mode) {
+    const locked = workBornFiles(PACK_ROOT);
+    lines.push(`MODE CHANGED: ${last} to ${now.mode}. ${locked.length} item(s) were born in work mode and stay locked to this machine whatever the mode: ${locked.join(", ") || "none"}.`);
+    audit(PACK_ROOT, { layer: "mode", verdict: "changed", from: last, to: now.mode, lockedCount: locked.length });
+  }
+  writeFileSync(statePath, JSON.stringify({ mode: now.mode, at: new Date().toISOString() }) + "\n", "utf8");
+  return lines.join("\n");
 }
 
 function editionLine() {
   const s = checkSeal(PACK_ROOT);
-  if (isWorkplace()) return "EDITION: work. Nothing leaves this machine, the Circle is never offered, and it is free for the person using it.";
+  const m = effectiveMode(PACK_ROOT);
+  if (m.mode === "held") return `EDITION: work (held). ${m.reason}. Ask the user once whether this is really their own machine; only if they say so in their own words, call alfa_confirm_personal.`;
+  if (m.mode === "work") return "EDITION: work. Nothing leaves this machine, the Circle is never offered, and it is free for the person using it.";
   if (s.status === "official") return `EDITION: ${s.edition}.`;
   return `EDITION: public (the seal could not confirm ${s.status === "modified" ? "an unmodified build" : "a lineage"}).`;
 }
@@ -225,6 +256,17 @@ const TOOLS = [
     },
   },
   {
+    name: "alfa_confirm_personal",
+    description:
+      "Only when the HUMAN has said, in their own words in this conversation, that this machine is their own personal machine although it shows signs of employer management. Records their statement as a security decision and lets alfa run as personal for these exact signs; if the signs change, it asks again. Never call this on your own judgment.",
+    inputSchema: {
+      type: "object",
+      properties: { statement: { type: "string", description: "the human's own words, quoted exactly" } },
+      required: ["statement"],
+      additionalProperties: false,
+    },
+  },
+  {
     name: "alfa_maturity",
     description:
       "Measure this alfa's maturity level (0 Seed, 1 Living, 2 Disciplined, 3 Circle-ready) from evidence that must resolve on disk: real memory entries with content, decisions in five parts, corrections, security calls, consented logs over weeks. Counts content, never claims. Reports every criterion with its address. Unlocks nothing; at level 3 it tells you to inform the master.",
@@ -252,7 +294,8 @@ function parseClawHeader(artifact) {
 
 function toolAlfaBoot() {
   const profile = parseProfile();
-  const parts = [nowLine() + "\n" + sealLine(PACK_ROOT) + "\n" + editionLine() + "\n" + USAGE_DUTY + "\n" + WORDS_TIP + "\n" + BAAHUBALI_DUTY];
+  const mode = modeReport();
+  const parts = [nowLine() + "\n" + sealLine(PACK_ROOT) + "\n" + editionLine() + (mode ? "\n" + mode : "") + "\n" + USAGE_DUTY + "\n" + WORDS_TIP + "\n" + BAAHUBALI_DUTY];
   const core = readPackFile("PORTABLE_O.md");
   const council = readPackFile("MEMORY.md");
   const index = readPackFile("MY_LIBRARY.md");
@@ -291,7 +334,7 @@ function toolMemorySave({ name, fact, why, apply }) {
   mkdirSync(dir, { recursive: true });
   const file = join(dir, safeName + ".md");
   const stamp = localDate();
-  const entry = `# ${safeName}\n\n${fact}\n\n**Why:** ${why}\n\n**How to apply:** ${apply}\n\n*Saved ${stamp}.*\n`;
+  const entry = `# ${safeName}\n\n${fact}\n\n**Why:** ${why}\n\n**How to apply:** ${apply}\n\n*Saved ${stamp}.*\n` + stampLine();
   writeFileSync(file, entry, "utf8");
   const indexPath = join(PACK_ROOT, "MY_LIBRARY.md");
   const indexLine = `- [${safeName}](memory/${safeName}.md): ${fact.slice(0, 100)}`;
@@ -331,7 +374,7 @@ function toolMemoryRecall({ name } = {}) {
 function toolClawGate({ artifact }) {
   const reasons = [];
   const header = parseClawHeader(artifact ?? "");
-  if (isWorkplace()) reasons.push("workplace mode is on: nothing leaves this machine, ever");
+  if (isWorkplace()) reasons.push(effectiveMode(PACK_ROOT).mode === "held" ? "this machine looks employer-managed and is not confirmed as personal, so it runs as Work: nothing leaves" : "workplace mode is on: nothing leaves this machine, ever");
   if (!header) reasons.push("no CLAW header found (fail-closed: a missing or malformed header is a DENY)");
   else {
     if (header.consent !== "yes") reasons.push(`consent is "${header.consent ?? "absent"}", must be exactly "yes"`);
@@ -342,7 +385,7 @@ function toolClawGate({ artifact }) {
   if (hits.length > 0) reasons.push("denylist terms present: " + hits.join(", "));
   const bbHits = bbRuleHits(artifact ?? "");
   if (bbHits.length > 0) reasons.push("Baahubali holds this: it breaks your bb rule(s) " + bbHits.map((r) => r.name).join(", "));
-  for (const h of wallHits(PACK_ROOT, artifact ?? "").filter((x) => x.includes("TRIPWIRE"))) reasons.push("Baahubali holds this: it carries " + h);
+  for (const h of wallHits(PACK_ROOT, artifact ?? "").filter((x) => x.includes("TRIPWIRE") || x.includes("WORK DATA"))) reasons.push("Baahubali holds this: it carries " + h);
   if (reasons.length > 0) {
     return text("DENY. This artifact may NOT leave the machine.\nReasons:\n- " + reasons.join("\n- "));
   }
@@ -363,7 +406,7 @@ function toolParallaxLog({ log }) {
   const stamp = localDate();
   const n = readdirSync(dir).filter((f) => f.startsWith(stamp)).length + 1;
   const file = join(dir, `${stamp}-${String(n).padStart(2, "0")}.md`);
-  writeFileSync(file, log, "utf8");
+  writeFileSync(file, log.replace(/\s*$/, "") + "\n" + stampLine(), "utf8");
   return text(
     `SAVED locally: parallax_logs/${basename(file)} (tier: ${header.tier ?? "unset"}). ` +
       "Local storage is always allowed. Leaving the machine requires a claw_gate ALLOW plus the user's explicit confirmation."
@@ -384,7 +427,7 @@ function toolBbThis({ name, decision, why, reopen_when, block = [] }) {
   mkdirSync(dir, { recursive: true });
   const entry =
     `# security-${safeName}\n\n[${stamp}] DECISION: ${decision}\nWHY: ${why}\nTRIGGER: guarded with "bb this".\nREOPEN-WHEN: ${reopen_when}\n\n` +
-    `**CLAW rule:** ${terms.length > 0 ? `${terms.length} block term(s) kept in claw_rules.local.json; claw_gate denies any outbound artifact containing them.` : "none (no block terms given); the decision is guarded as memory only."}\n\n*Guarded ${stamp}.*\n`;
+    `**CLAW rule:** ${terms.length > 0 ? `${terms.length} block term(s) kept in claw_rules.local.json; claw_gate denies any outbound artifact containing them.` : "none (no block terms given); the decision is guarded as memory only."}\n\n*Guarded ${stamp}.*\n` + stampLine();
   writeFileSync(join(dir, `security-${safeName}.md`), entry, "utf8");
   if (terms.length > 0) {
     const rules = loadBbRules().filter((r) => !r.broken && r.name !== safeName);
@@ -508,6 +551,25 @@ function toolAlfaMaturity() {
   return text(`MATURITY (measured from content on disk, not from claims)\n${verdict}\n\n${lines.join("\n")}`);
 }
 
+function toolConfirmPersonal({ statement }) {
+  const said = String(statement ?? "").trim();
+  if (said.length < 20) return errText("DENY: quote the human's own words in full (20 characters or more). This confirmation goes on record.");
+  const sig = managedSignals();
+  if (sig.strong.length === 0) return text("Nothing to confirm: this machine shows no signs of employer management, so it already runs as personal.");
+  if ((parseProfile().machine ?? "").startsWith("workplace")) return errText("DENY: setup said this is a work machine. Change that answer in profile.local.md first if it is wrong.");
+  const rec = confirmPersonal(PACK_ROOT, said);
+  const stamp = localDate();
+  const dir = join(PACK_ROOT, "memory");
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    join(dir, "security-machine-is-personal.md"),
+    `# security-machine-is-personal\n\n[${stamp}] DECISION: run alfa as personal on a machine that shows signs of employer management (${rec.signals.join(", ")}).\nWHY: the user said so in their own words: "${said}"\nTRIGGER: alfa held a "personal" setup answer as Work because of those signs.\nREOPEN-WHEN: the signs change (alfa asks again automatically), or the machine turns out to be the employer's.\n\n*Guarded ${stamp}.*\n` + stampLine(),
+    "utf8"
+  );
+  audit(PACK_ROOT, { layer: "mode", verdict: "confirmed-personal", signals: rec.signals.length });
+  return text(`Baahubali has it. Recorded as a security decision (memory/security-machine-is-personal.md). alfa now runs as personal for these signs: ${rec.signals.join(", ")}. If they change, it asks again. Anything already born in work mode stays locked.`);
+}
+
 const TOOL_IMPL = {
   alfa_boot: toolAlfaBoot,
   memory_save: toolMemorySave,
@@ -517,6 +579,7 @@ const TOOL_IMPL = {
   bb_this: toolBbThis,
   alfa_exec: toolAlfaExec,
   alfa_maturity: toolAlfaMaturity,
+  alfa_confirm_personal: toolConfirmPersonal,
 };
 
 // ---------- JSON-RPC over stdio ----------

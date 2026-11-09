@@ -70,7 +70,7 @@ const call = async (name, args = {}) => (await rpc("tools/call", { name, argumen
 try {
   await rpc("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "v23", version: "0" } });
   const names = ((await rpc("tools/list", {})).result?.tools ?? []).map((t) => t.name).sort();
-  check("tools/list exposes all eight tools", "a v2.3 tool silently missing", JSON.stringify(names) === JSON.stringify(["alfa_boot", "alfa_exec", "alfa_maturity", "bb_this", "claw_gate", "memory_recall", "memory_save", "parallax_log"]), names.join(", "));
+  check("tools/list exposes all nine tools", "a tool silently missing", JSON.stringify(names) === JSON.stringify(["alfa_boot", "alfa_confirm_personal", "alfa_exec", "alfa_maturity", "bb_this", "claw_gate", "memory_recall", "memory_save", "parallax_log"]), names.join(", "));
 
   // ---- the profile now lives in profile.local.md ----
   let boot = await call("alfa_boot");

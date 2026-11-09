@@ -27,7 +27,7 @@ import { execFileSync } from "node:child_process";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CORE_FILES, checkSeal, sealLine } from "./seal.mjs";
-import { wallHits, plantTripwire, evaluateCommand, loadBbRules, loadCanaries, loadDenylist, isWorkplace, audit } from "./walls.mjs";
+import { wallHits, plantTripwire, evaluateCommand, loadBbRules, loadCanaries, loadDenylist, audit, effectiveMode, managedSignals, workBornFiles } from "./walls.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.ALFA_HOME ? resolve(process.env.ALFA_HOME) : resolve(HERE, "..");
@@ -110,7 +110,9 @@ function status() {
       `  lock      ${isLocked() ? "core is read-only" : "core is writable (run: node mcp/baahubali.mjs lock)"}`,
       `  guard     ${guard ? "pre-commit gatekeeper installed" : "no gatekeeper (run: node mcp/baahubali.mjs install-guard)"}`,
       `  walls     ${loadDenylist(ROOT).length} denylist term(s), ${loadBbRules(ROOT).length} bb rule(s), ${loadCanaries(ROOT).length} tripwire(s)`,
-      `  machine   ${isWorkplace(ROOT) ? "work: nothing leaves, ever" : "personal"}`,
+      `  machine   ${(() => { const m = effectiveMode(ROOT); return `${m.mode}: ${m.reason}`; })()}`,
+      `  signs     ${(() => { const g = managedSignals(); return g.strong.length || g.weak.length ? [...g.strong, ...g.weak.map((w) => w + " (weak)")].join(", ") : "no signs of employer management"; })()}`,
+      `  work data ${workBornFiles(ROOT).length} item(s) born in work mode, locked to this machine`,
       `  edition   ${s.edition}${s.status === "official" ? "" : " (unverified)"}`,
     ].join("\n")
   );

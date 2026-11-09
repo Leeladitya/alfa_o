@@ -10,6 +10,7 @@
 | `memory_recall` | The index, or one entry in full. |
 | `claw_gate` | The CLAW consent gate as code, fail-closed. DENY unless consent yes, tier public, anonymized yes, denylist clean, every bb rule respected, and workplace mode off. |
 | `alfa_exec` | Runs one shell command through Baahubali. CLAW judges it first (`claw/policy.json`): local runs; outbound, destructive and install wait for `human_approved: true`; anything that breaks a wall or touches the core is denied; nothing outbound on a work machine. Audited by fingerprint, never by text. |
+| `alfa_confirm_personal` | Only on the human's own words: records that a machine showing signs of employer management is really theirs, as a security decision, and lets alfa run as personal for exactly those signs. Asks again if the signs change. Data already born in work mode stays locked. |
 | `alfa_maturity` | Measures maturity (Seed, Living, Disciplined, Circle-ready) from content that must resolve on disk, with the address of every criterion. Unlocks nothing. |
 | `bb_this` | "bb this": guards a security decision. Saves it to memory tagged security and, given block terms, adds a CLAW rule to claw_rules.local.json (gitignored) that `claw_gate` enforces from then on. |
 | `parallax_log` | Writes a decision log locally into parallax_logs/. Local always; outbound only via claw_gate ALLOW plus your explicit confirmation. |

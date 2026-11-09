@@ -1,19 +1,19 @@
 {
   "format": "alfa-seal/1",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "edition": "public",
-  "issued": "2026-11-08",
+  "issued": "2026-11-09",
   "keyId": "release-2026",
   "files": {
-    "PORTABLE_O.md": "9f78775020cbef81e299c14b0c2712686b89a68ce2f171a7af785936da56dd54",
+    "PORTABLE_O.md": "2a3aaef67aa85acce1181ff3aa7a299e1d5d5070e68d762d6268f75f1135eb97",
     "MEMORY.md": "cc1510352b7d3f133e44aaf331f99252d4bda1cf44d633482a8a00ba5ca00fb6",
     "CLAUDE.md": "251b4b8ee7121ffb35d09b1df96d9191dccc03d9ef5f18e983f0070cb719a102",
     "LICENSE": "8de231d3eff45bcce60b4dca20fc98efe6d60f243c20acd0a824116999ca2a1e",
     "claw/policy.json": "8083ec3cd6c28f0dcbbe472f93256f050982f7e4d81f93e69eb8d6bf73a70fe5",
-    "mcp/alfa-mcp.mjs": "ee8d287a333a1ebe44a09d256c79dd857b2184a730153a8d1705dd5fbb0f530d",
+    "mcp/alfa-mcp.mjs": "f1b65c215062c155b7fa94b3c07df230d605b21002663f2bba96d65ec5796c4f",
     "mcp/seal.mjs": "805ac5b4f532f0a56597b36bfe4c30aa40f29f0ee3d186401a0926b9100a0429",
-    "mcp/walls.mjs": "9b425f238d6bb4c761dafb5ad17b96454381641e3481738f8e8d633c747f2c8f",
-    "mcp/baahubali.mjs": "4fc79c7f6b5337b50a1d006a0ed28eecdaddec77ae876b9b40e5c344fbd5c477",
+    "mcp/walls.mjs": "57b218972a26a32d4c5265c7715d645dda0bb82119c6e74adbef49612011a78b",
+    "mcp/baahubali.mjs": "80df6ec53c679b78941be713172690c4bf44df681b879bc872e991c5509ad5cc",
     "workspaces/TEMPLATE.md": "c1bdd2cc6edd94e878b794b7d1fdbb1b8f081e985437b95abaa324d321347412",
     "workspaces/data-consultant-vertica.md": "59367f3cb6688965649c92845d363d0a7f7d273aa5a0a22390544bfde1c94b59"
   }

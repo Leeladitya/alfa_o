@@ -27,6 +27,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSy
 import { join, dirname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash, generateKeyPairSync, createPublicKey, createPrivateKey, diffieHellman, hkdfSync, randomBytes, createCipheriv, createDecipheriv } from "node:crypto";
+import { effectiveMode, BORN_WORK } from "../mcp/walls.mjs";
 
 const FORMAT = "alfa-tape/1";
 const FLOOR = { files: 1, bytes: 64 };
@@ -55,10 +56,8 @@ function readText(root, f) {
   return existsSync(p) ? readFileSync(p, "utf8") : null;
 }
 
-function isWorkplace(root) {
-  const prof = readText(root, "profile.local.md") ?? "";
-  return /^machine:\s*workplace/m.test(prof);
-}
+// the same effective mode as the rest of alfa: a "personal" answer on a machine that looks employer-managed is held as Work
+const isWorkplace = (root) => effectiveMode(root).mode !== "personal";
 
 function wallTerms(root) {
   const deny = (readText(root, "denylist.local.txt") ?? "").split("\n").map((t) => t.trim().toLowerCase()).filter((t) => t.length > 1 && !t.startsWith("#"));
@@ -100,7 +99,13 @@ function record(root, out, kind, toPub) {
   if (kind === "share" && isWorkplace(root)) die("this is a work machine: nothing leaves it, so share tapes are never recorded here. A backup tape is fine.");
   if (kind === "share" && !toPub) die("a share tape must be sealed to its receiver: add --to <receiver.pub>");
   const allow = kind === "share" ? SHARE_HOME : BACKUP_HOME;
-  const files = walk(root).filter((f) => allow.some((re) => re.test(f)));
+  let files = walk(root).filter((f) => allow.some((re) => re.test(f)));
+  const workBorn = files.filter((f) => readFileSync(join(root, f), "utf8").includes(BORN_WORK));
+  if (workBorn.length > 0 && kind === "share") die(`share tape refused: ${workBorn.join(", ")} were born on a work machine, and work data never leaves.`);
+  if (workBorn.length > 0 && !isWorkplace(root)) {
+    console.log(`left off the tape: ${workBorn.length} item(s) born in work mode, which stay locked to this machine: ${workBorn.join(", ")}`);
+    files = files.filter((f) => !workBorn.includes(f));
+  }
   const entries = files.map((f) => {
     const buf = readFileSync(join(root, f));
     return { path: f, sha256: sha256(buf), size: buf.length, data: buf.toString("base64") };
