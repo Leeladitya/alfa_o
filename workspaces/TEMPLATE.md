@@ -11,7 +11,7 @@
 consent: unset            (yes | no; yes required to contribute)
 tier: unset               (must be public to contribute)
 anonymized: unset         (yes required; check twice)
-license: Collective Intelligence License, alfa_o edition v1.0
+license: Collective Intelligence License, alfa_o edition v1.0.1
 contributed_by: unset     (your handle, never your name)
 --- END ---
 ```

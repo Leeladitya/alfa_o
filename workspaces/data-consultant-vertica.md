@@ -9,7 +9,7 @@
 consent: yes
 tier: public
 anonymized: yes
-license: Collective Intelligence License, alfa_o edition v1.0
+license: Collective Intelligence License, alfa_o edition v1.0.1
 contributed_by: LEED (method author, on the consultant's behalf, anonymized)
 --- END ---
 ```

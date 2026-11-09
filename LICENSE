@@ -1,4 +1,8 @@
-ALFA_O COLLECTIVE INTELLIGENCE LICENSE (CIL), alfa_o edition, v1.0
+ALFA_O COLLECTIVE INTELLIGENCE LICENSE (CIL), alfa_o edition, v1.0.1
+
+v1.0.1 (2026-11-08) corrects the description of the Work only: alfa_o has
+grown from a method into an operating system. No right, permission,
+obligation or condition of v1.0 has changed.
 
 Copyright (c) 2026 LEED (leed.life) and devudaaaa Research Lab
 (devudaaaa.xyz). All rights reserved.
@@ -9,8 +13,9 @@ devudaaaa Research Lab projects. The alfa_o pack is held jointly by both.
 
 This is a sibling of the Collective Intelligence License v1.0 governing
 the Parallax Engine. It is NOT the same document. Parallax is a research
-engine; alfa_o is a method meant to be carried onto other people's
-machines, so the terms below are deliberately more permissive. Where the
+engine; alfa_o is an operating system for working with AI (a method, a
+signed core, and a guard) meant to run on other people's machines, so
+the terms below are deliberately more permissive. Where the
 two documents differ, each governs only its own work.
 
 ════════════════════════════════════════════════════════════════════════
@@ -177,8 +182,9 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 THE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY ARISING FROM THE WORK OR ITS USE.
 
-The Work is a method for working with AI systems. It does not verify
-their output. You remain responsible for what you ship.
+The Work is an operating system for working with AI systems. It does
+not verify their output, and its guard reduces risk without removing
+it. You remain responsible for what you ship.
 
 ════════════════════════════════════════════════════════════════════════
 9. TERMINATION

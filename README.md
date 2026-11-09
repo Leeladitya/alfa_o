@@ -148,6 +148,7 @@ Come explore v2.1. The revolution is in the method, and it is just getting start
 
 ## Changelog
 
+- **v2.3.2 (2026-11-08). The licence describes what alfa_o is now.** LICENSE v1.0.1 calls alfa_o an operating system (a method, a signed core, and a guard) instead of a method; no right or obligation changed. Re-signed by goldpack.
 - **v2.3.1 (2026-11-07). Tapes.** `tapes/tape.mjs` records an alfa's home onto a backup or share tape and plays it into another alfa: home only, never the core; a content floor that counts knowledge, so an empty tape never reports success; share tapes scrubbed and sealed to one receiver (X25519 and AES-256-GCM); playing shows the plan first and never overwrites; work machines back up only. 9 checks. Outside the sealed core, so the seal still reads official 2.3.0.
 - **v2.3 (2026-11-07). The seal and Baahubali.** (1) **The seal** (`mcp/seal.mjs`): goldpack's offline root key certifies a release key, the release key signs a manifest of every core file with its edition, and every boot reports official, modified (naming the files), or lineage unknown. A forged edition tag breaks the signature. It never locks anyone out. (2) **Baahubali** (`mcp/baahubali.mjs`, `mcp/walls.mjs`, `claw/policy.json`): the core locked read-only on disk; a git pre-commit gatekeeper that holds real names, personal files, bb-guarded terms, tripwire text and unreleased core changes, under every AI agent; tripwire decoys; and `alfa_exec`, which runs a shell command only after CLAW judges it (plain local commands run, outbound, destructive and install commands wait for the human's yes, anything that breaks a wall or touches the core is denied, and nothing outbound ever runs on a work machine). (3) **Editions**: the seal names the edition, and a work machine always runs as Work. (4) **`alfa_maturity`**: Seed, Living, Disciplined, Circle-ready, measured from content that must resolve on disk; a one-day burst of entries or an empty entry scores nothing. (5) **Your profile moves to `profile.local.md`** (gitignored), so your answers never sit in a tracked file. Tests: 19 original checks plus 19 new ones; four deliberate breaks were each caught by the check meant for them.
 
@@ -159,14 +160,14 @@ Come explore v2.1. The revolution is in the method, and it is just getting start
 
 ## License
 
-[Collective Intelligence License, alfa_o edition, v1.0](LICENSE). Joint copyright, LEED and devudaaaa Research Lab. In plain words:
+[Collective Intelligence License, alfa_o edition, v1.0.1](LICENSE). v1.0.1 only corrects the description of alfa_o (now an operating system); the terms are exactly those of v1.0. Joint copyright, LEED and devudaaaa Research Lab. In plain words:
 
 - **Use it anywhere, free, including at your job**, on client work, and inside a company. No registration, no notice, no fee.
 - **What you make with it is yours.** The license claims nothing over your deliverables. Your profile, memory, council log, and local logs are yours, and sharing any of them is an invitation, never a requirement.
 - **Published forks come back.** If you publicly distribute a modified alfa_o, it ships under this same license, marked as modified, with attribution intact. Private changes trigger nothing.
 - **Selling alfa_o itself needs an agreement.** Using it to earn a living does not.
 
-It is a sibling of the Collective Intelligence License v1.0 that governs the Parallax Engine, and deliberately more permissive, because a method you cannot carry onto an employer's machine is a method nobody can use.
+It is a sibling of the Collective Intelligence License v1.0 that governs the Parallax Engine, and deliberately more permissive, because an operating system you cannot carry onto an employer's machine is one nobody can use.
 
 ## Attribution
 

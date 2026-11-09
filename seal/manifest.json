@@ -1,20 +1,20 @@
 {
   "format": "alfa-seal/1",
-  "version": "2.3.0",
+  "version": "2.3.2",
   "edition": "public",
-  "issued": "2026-11-07",
+  "issued": "2026-11-08",
   "keyId": "release-2026",
   "files": {
-    "PORTABLE_O.md": "0e4037dadc34f83dd9a61666b036d446c036954296bf38c29e1bf15ac18f5e79",
+    "PORTABLE_O.md": "9f78775020cbef81e299c14b0c2712686b89a68ce2f171a7af785936da56dd54",
     "MEMORY.md": "cc1510352b7d3f133e44aaf331f99252d4bda1cf44d633482a8a00ba5ca00fb6",
     "CLAUDE.md": "251b4b8ee7121ffb35d09b1df96d9191dccc03d9ef5f18e983f0070cb719a102",
-    "LICENSE": "10250bfebf9300a7fbfc11415bb63d6a00933fc921a16301c3a67b20e3bc831f",
+    "LICENSE": "8de231d3eff45bcce60b4dca20fc98efe6d60f243c20acd0a824116999ca2a1e",
     "claw/policy.json": "8083ec3cd6c28f0dcbbe472f93256f050982f7e4d81f93e69eb8d6bf73a70fe5",
     "mcp/alfa-mcp.mjs": "ee8d287a333a1ebe44a09d256c79dd857b2184a730153a8d1705dd5fbb0f530d",
     "mcp/seal.mjs": "805ac5b4f532f0a56597b36bfe4c30aa40f29f0ee3d186401a0926b9100a0429",
     "mcp/walls.mjs": "9b425f238d6bb4c761dafb5ad17b96454381641e3481738f8e8d633c747f2c8f",
     "mcp/baahubali.mjs": "4fc79c7f6b5337b50a1d006a0ed28eecdaddec77ae876b9b40e5c344fbd5c477",
-    "workspaces/TEMPLATE.md": "c1964ff1be12e4ee5a913de34fbef1df00d443553a6b0c4708962ae1d6590e46",
-    "workspaces/data-consultant-vertica.md": "b422bf99028cbca6f64cc295a85496e24fb8bc9fe35616942a80cff7eb435b83"
+    "workspaces/TEMPLATE.md": "c1bdd2cc6edd94e878b794b7d1fdbb1b8f081e985437b95abaa324d321347412",
+    "workspaces/data-consultant-vertica.md": "59367f3cb6688965649c92845d363d0a7f7d273aa5a0a22390544bfde1c94b59"
   }
 }

@@ -160,7 +160,7 @@ outcome: (what actually happened, if known yet; else "pending")
 
 **The collective intelligence channel.** If the user said yes in first-run setup, then for each public log: re-check it for anything identifying, show it to the user one last time, and on their confirmation submit it as a new GitHub issue titled "Parallax log submission (alfa_o)" at **github.com/devudaaaa/parallax/issues/new** (or give the user that link with the log ready to paste). Every contributed log feeds the open corpus on how people actually decide. The user can flip `parallax_logs` in the profile at any time, in either direction, and it applies from that moment on. On a workplace machine this channel is closed entirely, no exceptions, regardless of consent settings.
 
-**The collective intelligence terms (since v2.2).** Who shares what depends on the edition the copy runs as. These are terms of the method; the licence (Collective Intelligence License, alfa_o edition, v1.0) is unchanged.
+**The collective intelligence terms (since v2.2).** Who shares what depends on the edition the copy runs as. These are terms of the method; the licence (Collective Intelligence License, alfa_o edition, v1.0.1, whose terms are unchanged since v1.0) is not altered by them.
 
 | Edition | Who | Sharing |
 |---|---|---|
